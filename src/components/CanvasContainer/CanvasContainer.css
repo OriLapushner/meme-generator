@@ -1,0 +1,10 @@
+.canvas-container{
+width: 40%;
+display:inline-block
+}
+.hidden {
+    display: none;
+}
+img{
+    height: 200px;
+}

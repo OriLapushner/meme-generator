@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import ControlPanel from './components/ControlPanel/ControlPanel.jsx'
+import CanvasContainer from './components/CanvasContainer/CanvasContainer'
+import './App.css'
 import 'bulma/css/bulma.css';
 class App extends Component {
   constructor(props) {
@@ -8,18 +10,32 @@ class App extends Component {
       texts: [{
         font: null,
         color: 'white',
-        body: null
+        body: null,
+        placeholder: 'top text'
       }, {
         font: null,
         color: 'white',
-        body: null
+        body: null,
+        placeholder: 'bottom text'
       }]
     }
   }
-
+  addTextHandler = () => {
+    this.setState( state => {
+     var newTexts = [...state.texts,
+       { font:null,
+        color:'white',
+        body:null,
+        placeholder: 'new text'}]
+       
+      return {texts:newTexts}
+    })
+  }
   render() {
     return ( < div className = "App" >
-      app <ControlPanel texts = {this.state.texts }/>
+    <CanvasContainer uploadImgHandler={this.uploadImgHandler}/>
+      app <ControlPanel texts = {this.state.texts }
+       addTextHandler={this.addTextHandler}/>
        </div>
     );
   }

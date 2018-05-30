@@ -1,5 +1,6 @@
 .control-panel{
 height: 400px;
-width: 800px;
+width: 400px;
 background:orange;
+display: inline-block;
 }

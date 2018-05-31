@@ -34,7 +34,7 @@ class App extends Component {
   render() {
     return ( < div className = "App" >
     <CanvasContainer uploadImgHandler={this.uploadImgHandler}/>
-      app <ControlPanel texts = {this.state.texts }
+    <ControlPanel texts = {this.state.texts }
        addTextHandler={this.addTextHandler}/>
        </div>
     );

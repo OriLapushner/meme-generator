@@ -1,6 +1,10 @@
 .canvas-container{
 width: 40%;
-display:inline-block
+display:inline-block;
+background: orange;
+}
+.canvas{
+    border: 1px solid black;
 }
 .hidden {
     display: none;

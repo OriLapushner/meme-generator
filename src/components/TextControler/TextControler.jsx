@@ -8,6 +8,7 @@ const TextControl = props => {
         className="textarea is-small"
         placeholder={props.textInfo.placeholder}
         rows="2"
+        onKeyUp={(event) => props.updateTextBody(event,props.textInfo.id)}
       />
       <div className="select">
         <select>

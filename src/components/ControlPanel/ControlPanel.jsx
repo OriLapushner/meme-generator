@@ -6,7 +6,8 @@ const controlPanel = props => {
   return (
     <div className="control-panel">
         <Button clicked={props.addTextHandler}>+</Button>
-      <TextControlers texts={props.texts} />
+      <TextControlers texts={props.texts}
+      updateTextBody={props.updateTextBody} />
 
     </div>
   );

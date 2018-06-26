@@ -1,4 +1,5 @@
 import React ,{Component} from 'react'
+import DragableDivs from '../DragableDivs/DragableDivs'
 import './CanvasContainer.css'
 
  class CanvasContainer extends Component{
@@ -8,9 +9,17 @@ import './CanvasContainer.css'
          this.img = React.createRef();
          this.canvas = React.createRef();
          this.state = {
-             imgSrc: null
+             imgSrc: null,
+             size: {
+                 width: 0 ,
+                 height: 0
+             },
          }
-
+     }
+     drawText = () => {
+     var ctx = this.canvas.current.getContext('2d')
+     ctx.font ="30px Arial"
+     ctx.fillText("test",10,10)    
      }
 getImgHandler = (e) => {
     var reader = new FileReader  
@@ -29,7 +38,14 @@ getImgHandler = (e) => {
         var sizes = this.getScaledImgSize(this.img.current.width,this.img.current.height,400,400)
         this.canvas.current.height = sizes.height
         this.canvas.current.width = sizes.width
-        console.log(sizes)
+        // console.log(sizes)
+        this.props.updateAllTextBoxStyle({width:sizes.width/2,height:50})
+        var textBoxTop = sizes.height - 50;
+        console.log(textBoxTop)
+        this.props.updateTextBoxStyle(this.props.texts[1].id,{top:textBoxTop})
+        this.setState(state => {
+            return {...state,sizes}
+        })
         ctx.drawImage(this.img.current,0,0,sizes.width,sizes.height)
     }
     getScaledImgSize = (width,height,maxHeight,maxWidth) => {
@@ -49,14 +65,15 @@ getImgHandler = (e) => {
             scaledHeight = height
             scaledWidth = width
         }
-        console.log('original relation:',width/height,'scaled relation:',scaledWidth/scaledHeight)
+        // console.log('original relation:',width/height,'scaled relation:',scaledWidth/scaledHeight)
         return {width:scaledWidth,height:scaledHeight}
     }
 render() {
     return ( <div className="canvas-container">
     <img ref="img" className="hidden" src={this.state.imgSrc} ref={this.img}/>
+<DragableDivs texts={this.props.texts} canvasSize={this.state.sizes}/>
 <canvas className="canvas" ref={this.canvas}/>
-<input type="file" accept="image/*" onChange={this.getImgHandler} ref={this.fileInput}/>
+ <input type="file" accept="image/*" onChange={this.getImgHandler} ref={this.fileInput}/>
 </div>
 )
 }

@@ -1,0 +1,5 @@
+.dragable{
+    border: 1px solid green;
+    position: absolute;
+    display: inline;
+}

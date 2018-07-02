@@ -38,20 +38,24 @@ class DragableDiv extends Component {
     });
     var leftToUpdate = dragable.offsetLeft - this.state.pos1
     var topToUpdate = dragable.offsetTop - this.state.pos2
-    if (topToUpdate <= this.props.canvasSize.height - dragable.offsetHeight &&
-       topToUpdate > 0)dragable.style.top = topToUpdate + "px"
+    var yCoordMax = this.props.canvasSize.height - dragable.offsetHeight
+    var xCoordMax = this.props.canvasSize.width - dragable.offsetWidth
+    if (topToUpdate > yCoordMax) topToUpdate = yCoordMax
+    else if(topToUpdate < 0) topToUpdate = 0
+    this.props.updateTextBoxStyle(this.props.text.id,{top:topToUpdate})
+      //  dragable.style.top = topToUpdate + "px"
   
-    if(leftToUpdate <= this.props.canvasSize.width - dragable.offsetWidth &&
-       leftToUpdate > 0)dragable.style.left = leftToUpdate + "px";
+    if(leftToUpdate > xCoordMax) leftToUpdate = xCoordMax
+    else if(leftToUpdate < 0) leftToUpdate = 0
+    this.props.updateTextBoxStyle(this.props.text.id,{left:leftToUpdate})
+      //  dragable.style.left = leftToUpdate + "px";
   };
   render() {
     return (
       <div
         className="dragable"
         ref={this.dragable}
-        style={this.props.text.style}
-      >
-        {this.props.text.body}
+        style={this.props.text.style}>
       </div>
     );
   }

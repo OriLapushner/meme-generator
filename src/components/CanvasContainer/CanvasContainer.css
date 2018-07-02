@@ -4,6 +4,9 @@ width: 410px;
 display:inline-block;
 background: orange;
 }
+.drawing-canvas{
+    position: absolute;
+}
 .canvas{
     display: inline;
     border: 1px solid black;

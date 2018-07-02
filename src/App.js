@@ -15,7 +15,9 @@ const textTemplate = {
   placeholder: "new text",
   style: {
     width: 0,
-    height: 50
+    height: 50,
+    top:0,
+    left:0
   }
 };
 
@@ -29,23 +31,26 @@ class App extends Component {
           id: generateId(),
           font: null,
           color: "white",
-          body: null,
+          body: '',
           placeholder: "text 1",
           style: {
             width: 0,
-            height: 50
+            height: 50,
+            top:0,
+            left:0
           }
         },
         {
           id: generateId(),
           font: null,
           color: "white",
-          body: null,
+          body: '',
           placeholder: "text 2",
           style: {
             width: 0,
             height: 50,
-            top: 350
+            top:0,
+            left:0
           }
         }
       ]
@@ -54,7 +59,7 @@ class App extends Component {
   updateTextBody = (e,id) => {
     var val = e.target.value
     this.setState(state => {
-      var idx = state.texts.findIndex((text) => id === text.id)
+      var idx = state.texts.findIndex(text => id === text.id)
       var newTexts = [...state.texts]
       newTexts[idx].body = val
       return {
@@ -62,6 +67,11 @@ class App extends Component {
         texts:[...newTexts],
       }
     })
+    var textToUpdate = this.state.texts.find( text => text.id === id)
+    var textsToUpdate = this.state.texts.filter(text => text.id !== id)
+    this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
+    this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,textsToUpdate)
+    this.canvasRef.drawText(this.canvasRef.drawingCanvas.current,textToUpdate,val)
   }
   addTextHandler = () => {
     this.setState(state => {
@@ -76,35 +86,22 @@ class App extends Component {
       for (var style in stylesToUpdate) {
         newStyle[style] = stylesToUpdate[style];
       }
-      console.log(newStyle);
+      // console.log(newStyle);
       var newTexts = [...state.texts];
       newTexts[idxToUpdate].style = newStyle
       return {...state,
       texts:newTexts};
     });
-  };
-  updateAllTextBoxStyle = stylesToUpdate => {
-    this.setState(state => {
-      var newTexts = state.texts.map(text => {
-        var newStyle = { ...text.style };
-        for (var style in stylesToUpdate) {
-          newStyle[style] = stylesToUpdate[style];
-        }
-        text.style = newStyle;
-        console.log(newStyle);
-        return text;
-      });
-      return { texts: newTexts };
-    });
+    this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
+    this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,this.state.texts)
   };
   render() {
     return (
       <div className="App">
         <CanvasContainer
-          uploadImgHandler={this.uploadImgHandler}
           texts={this.state.texts}
-          updateAllTextBoxStyle={this.updateAllTextBoxStyle}
           updateTextBoxStyle={this.updateTextBoxStyle}
+          getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
           updateTextBody={this.updateTextBody}

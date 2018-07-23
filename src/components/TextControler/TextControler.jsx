@@ -1,7 +1,8 @@
 import React from "react";
 import Button from "../Button/Button";
+import ColorPicker from '../ColorPicker/ColorPicker'
 import "./TextControler.css";
-const TextControl = props => {
+const TextControler = props => {
   return (
     <div className="text-controler">
       <textarea
@@ -10,15 +11,21 @@ const TextControl = props => {
         rows="2"
         onKeyUp={(event) => props.updateTextBody(event,props.textInfo.id)}
       />
+      <div className="buttons-container">
       <div className="select">
         <select>
           <option>font 1</option>
           <option>font 2</option>
         </select>
       </div>
-      <input className="input-color" type="color" />
+      <div className="txt-color-button" style={{background:props.textInfo.color}}
+      onClick={() => props.colorPickerClickedHandler(props.textInfo.id)}/>
+      
+      <ColorPicker textInfo={props.textInfo}
+      colorChangedHandler={props.colorChangedHandler}/>
       <Button>advanced</Button>
+      </div>
     </div>
   );
 };
-export default TextControl;
+export default TextControler;

@@ -1,19 +1,18 @@
-.canvas-container{
+.canvas-container {
     position: relative;
-width: 410px;
-display:inline-block;
-background: orange;
+    width: 410px;
+    display: inline-block;
 }
-.drawing-canvas{
+
+.drawing-canvas {
     position: absolute;
 }
-.canvas{
+
+.canvas {
     display: inline;
     border: 1px solid black;
 }
-.hidden {
-    display: none;
-}
-img{
+
+img {
     height: 200px;
 }

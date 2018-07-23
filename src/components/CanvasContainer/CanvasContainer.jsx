@@ -30,7 +30,7 @@ class CanvasContainer extends Component {
     var textToDraw = val ? val : text.body
     var ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
-    ctx.fillStyle = "white";
+    ctx.fillStyle = text.color;
     ctx.textAlign = "center";
     // ctx.textBaseline = 'top';
     // console.log(ctx.measureText(text));

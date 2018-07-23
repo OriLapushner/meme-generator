@@ -1,4 +1,10 @@
 .App{
 display: flex;
-margin: 40px;
+background:orange;
+}
+html,body,.App,#root{
+    height: 100%;
+}
+.hidden {
+    display: none;
 }

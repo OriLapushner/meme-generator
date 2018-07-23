@@ -7,19 +7,21 @@ import "bulma/css/bulma.css";
 function generateId() {
   return Math.floor(Math.random() * 1000000);
 }
-const textTemplate = {
-  id: generateId(),
-  font: null,
-  color: "white",
-  body: null,
-  placeholder: "new text",
-  style: {
+
+function text(){
+  this.id = generateId()
+  this.font = null,
+  this.color = "black",
+  this.body = "",
+  this.placeholder = "new text",
+  this.colorPickerDisplayed = false,
+  this.style = {
     width: 0,
     height: 50,
     top:0,
     left:0
   }
-};
+}
 
 class App extends Component {
   constructor(props) {
@@ -30,9 +32,10 @@ class App extends Component {
         {
           id: generateId(),
           font: null,
-          color: "white",
+          color: "black",
           body: '',
           placeholder: "text 1",
+          colorPickerDisplayed:false,
           style: {
             width: 0,
             height: 50,
@@ -43,9 +46,10 @@ class App extends Component {
         {
           id: generateId(),
           font: null,
-          color: "white",
+          color: "black",
           body: '',
           placeholder: "text 2",
+          colorPickerDisplayed:false,
           style: {
             width: 0,
             height: 50,
@@ -55,6 +59,51 @@ class App extends Component {
         }
       ]
     };
+  }
+  colorChangedHandler = (color,id) => {
+    this.updateTextProps(id,{color})
+  }
+  colorPickerClickedHandler = (id) => {
+    var isColorPickerDisplayed = this.state.texts.find( text => text.id === id).colorPickerDisplayed
+    if(isColorPickerDisplayed){
+      this.updateTextProps(id,{colorPickerDisplayed:false})
+      return
+    } else {
+      this.updateTextProps(id,{colorPickerDisplayed:true})
+      document.onmousedown = (e) => {
+        // console.log(e)
+        // console.log(this.updateTextProps)
+        var colorPickerPathed =  e.path.findIndex(element =>{
+          if(element.classList){
+            // console.log(element.classList[0] === "color-picker-container")
+            return element.classList[0] === "color-picker-container" ||
+             element.classList[0] === "txt-color-button"
+          } else return false
+        }) 
+        if(colorPickerPathed !== -1){
+          return;
+        }
+         else {
+           document.onmousedown = null
+            this.updateTextProps(id,{colorPickerDisplayed:false})
+         }
+      }
+    }
+    // this.updateTextProps(id,{colorPickerDisplayed:!this.state.colorPickerDisplayed})
+  }
+  updateTextProps = (id,newTextProps) => {
+    // console.log('update text')
+    this.setState(state => {
+      var idx = state.texts.findIndex( text => text.id === id)
+    var newTexts = [...state.texts]
+    for(var prop in newTextProps){
+      newTexts[idx][prop] = newTextProps[prop]
+    }
+    return {
+      ...state,
+      texts:newTexts
+    }
+  })  
   }
   updateTextBody = (e,id) => {
     var val = e.target.value
@@ -75,7 +124,7 @@ class App extends Component {
   }
   addTextHandler = () => {
     this.setState(state => {
-      var newTexts = [...state.texts, textTemplate];
+      var newTexts = [...state.texts, new text()];
       return { texts: newTexts };
     });
   };
@@ -94,7 +143,19 @@ class App extends Component {
     });
     this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
     this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,this.state.texts)
-  };
+  }
+  saveImg = () => {
+    this.canvasRef.drawTexts(this.canvasRef.canvas.current,this.state.texts)
+    var dataURL = this.canvasRef.canvas.current.toDataURL('image/jpeg',1)
+    var link = document.createElement('a');
+    link.setAttribute('href', dataURL);
+    link.setAttribute('download', 'meme.jpeg');
+    link.setAttribute('target', '_blank');
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   render() {
     return (
       <div className="App">
@@ -104,9 +165,13 @@ class App extends Component {
           getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
+          colorChangedHandler={this.colorChangedHandler}
+          updateTextProps={this.updateTextProps}        
           updateTextBody={this.updateTextBody}
           texts={this.state.texts}
           addTextHandler={this.addTextHandler}
+          saveImg={this.saveImg}
+          colorPickerClickedHandler={this.colorPickerClickedHandler}
         />
       </div>
     );

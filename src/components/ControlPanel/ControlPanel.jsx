@@ -7,8 +7,11 @@ const controlPanel = props => {
     <div className="control-panel">
         <Button clicked={props.addTextHandler}>+</Button>
       <TextControlers texts={props.texts}
-      updateTextBody={props.updateTextBody} />
-
+      updateTextBody={props.updateTextBody}
+      updateTextProps={props.updateTextProps}
+      colorPickerClickedHandler={props.colorPickerClickedHandler}
+      colorChangedHandler={props.colorChangedHandler} />
+    <Button clicked={props.saveImg}>Download Image</Button>
     </div>
   );
 };

@@ -5,6 +5,7 @@
   "dependencies": {
     "bulma": "^0.7.1",
     "react": "^16.4.0",
+    "react-color": "^2.14.1",
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4"
   },

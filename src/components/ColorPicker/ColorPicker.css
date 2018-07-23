@@ -1,0 +1,14 @@
+.color-picker-container{
+    z-index:100;
+    background-color: #EEE;
+    position: relative;  
+    left:-130px;
+    top:32px;
+}
+.color-picker-wrapper{
+    display: inline-block;
+    height: 30px;
+    position: absolute;
+    width: 100px;
+    top:10px;
+}

@@ -62,6 +62,7 @@ class App extends Component {
   }
   colorChangedHandler = (color,id) => {
     this.updateTextProps(id,{color})
+    this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,this.state.texts)
   }
   colorPickerClickedHandler = (id) => {
     var isColorPickerDisplayed = this.state.texts.find( text => text.id === id).colorPickerDisplayed
@@ -156,9 +157,19 @@ class App extends Component {
     link.click();
     document.body.removeChild(link);
   }
+  onDragHandler = (e) => {
+    //prevents default browser drag file behaviour
+    e.preventDefault()
+  }
+  onDropHandler = (e) => {
+    //prevents default browser drag file behaviour and handles file upload
+    var file = e.dataTransfer.items[0].getAsFile()
+      this.canvasRef.getImgHandler(null,file)
+    e.preventDefault()
+  }
   render() {
     return (
-      <div className="App">
+      <div className="App" onDragOver={this.onDragHandler} onDrop={this.onDropHandler}>
         <CanvasContainer
           texts={this.state.texts}
           updateTextBoxStyle={this.updateTextBoxStyle}

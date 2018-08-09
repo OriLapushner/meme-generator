@@ -23,27 +23,27 @@ class CanvasContainer extends Component {
   componentWillUnmount() {
     this.props.ref(null);
   }
-  clearCanvas(canvas){
-    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height)
+  clearCanvas(canvas) {
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
   }
   drawText = (canvas, text, val) => {
-    var textToDraw = val ? val : text.body
+    var textToDraw = val ? val : text.body;
     var ctx = canvas.getContext("2d");
     ctx.font = "30px Arial";
     ctx.fillStyle = text.color;
     ctx.textAlign = "center";
     // ctx.textBaseline = 'top';
     // console.log(ctx.measureText(text));
-    var drawCoordX = text.style.left + text.style.width/2
-    var drawCoordY = text.style.top + text.style.height/2
+    var drawCoordX = text.style.left + text.style.width / 2;
+    var drawCoordY = text.style.top + text.style.height / 2;
     ctx.fillText(textToDraw, drawCoordX, drawCoordY);
-  }
-  drawTexts = (canvas,texts) => {
+  };
+  drawTexts = (canvas, texts) => {
     texts.forEach(text => {
-      this.drawText(canvas,text)
-    })
-  }
-  getImgHandler = e => {
+      this.drawText(canvas, text);
+    });
+  };
+  getImgHandler = (e, fileToUpload) => {
     var reader = new FileReader();
     reader.addEventListener(
       "load",
@@ -52,7 +52,7 @@ class CanvasContainer extends Component {
       },
       false
     );
-    var file = this.fileInput.current.files[0];
+    var file = fileToUpload || this.fileInput.current.files[0];
     if (file) {
       reader.readAsDataURL(file);
       this.img.current.onload = this.drawImgToCanvas;
@@ -69,8 +69,8 @@ class CanvasContainer extends Component {
     );
     this.canvas.current.height = sizes.height;
     this.canvas.current.width = sizes.width;
-    this.drawingCanvas.current.height = sizes.height
-    this.drawingCanvas.current.width = sizes.width
+    this.drawingCanvas.current.height = sizes.height;
+    this.drawingCanvas.current.width = sizes.width;
     // console.log(sizes)
     this.setState(state => {
       return {
@@ -80,20 +80,25 @@ class CanvasContainer extends Component {
     });
     var textBoxTop = sizes.height - 50;
 
-    this.props.updateTextBoxStyle(this.props.texts[0].id, { top: 0, left: 0 ,width:sizes.width/2,height:50});
+    this.props.updateTextBoxStyle(this.props.texts[0].id, {
+      top: 0,
+      left: 0,
+      width: sizes.width / 2,
+      height: 50
+    });
     this.props.updateTextBoxStyle(this.props.texts[1].id, {
       top: textBoxTop,
       left: 0,
-      width:sizes.width/2,
-      height:50
+      width: sizes.width / 2,
+      height: 50
     });
     ctx.drawImage(this.img.current, 0, 0, sizes.width, sizes.height);
   };
   getScaledImgSize = (width, height, maxHeight, maxWidth) => {
     var scaledWidth, scaledHeight, higherValue;
-    higherValue = width > height ? "width" : "height";
+    higherValue = width >= height ? "width" : "height";
     if (higherValue === "width") {
-      if (width > maxWidth) {
+      if (width >= maxWidth) {
         scaledWidth = maxWidth;
         scaledHeight = height / (width / maxWidth);
       }
@@ -108,7 +113,11 @@ class CanvasContainer extends Component {
       "original relation:",
       width / height,
       "scaled relation:",
-      scaledWidth / scaledHeight
+      scaledWidth / scaledHeight,
+      "scaled width",
+      width,
+      "scaled height",
+      height
     );
     return { width: scaledWidth, height: scaledHeight };
   };
@@ -122,8 +131,11 @@ class CanvasContainer extends Component {
           ref={this.img}
         />
         <canvas className="canvas drawing-canvas" ref={this.drawingCanvas} />
-        <DragableDivs texts={this.props.texts} canvasSize={this.state.sizes} 
-        updateTextBoxStyle={this.props.updateTextBoxStyle}/>
+        <DragableDivs
+          texts={this.props.texts}
+          canvasSize={this.state.sizes}
+          updateTextBoxStyle={this.props.updateTextBoxStyle}
+        />
         <canvas className="canvas" ref={this.canvas} />
         <input
           type="file"

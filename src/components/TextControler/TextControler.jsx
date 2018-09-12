@@ -18,7 +18,8 @@ const TextControler = props => {
           <option>font 2</option>
         </select>
       </div>
-      <div className="txt-color-button" style={{background:props.textInfo.color}}
+      <div className="txt-color-button rounded" style={{background:props.textInfo.color}}
+      title="change text color"
       onClick={() => props.colorPickerClickedHandler(props.textInfo.id)}/>
       
       <ColorPicker textInfo={props.textInfo}

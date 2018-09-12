@@ -8,3 +8,6 @@ html,body,.App,#root{
 .hidden {
     display: none;
 }
+.rounded{
+    border-radius: 50%
+}

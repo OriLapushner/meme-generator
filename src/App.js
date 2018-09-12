@@ -8,12 +8,12 @@ function generateId() {
   return Math.floor(Math.random() * 1000000);
 }
 
-function text(){
+function Text(placeholder){
   this.id = generateId()
   this.font = null,
   this.color = "black",
   this.body = "",
-  this.placeholder = "new text",
+  this.placeholder = placeholder || "new text" ,
   this.colorPickerDisplayed = false,
   this.style = {
     width: 0,
@@ -29,34 +29,8 @@ class App extends Component {
     this.state = {
       canvasHeight: 0,
       texts: [
-        {
-          id: generateId(),
-          font: null,
-          color: "black",
-          body: '',
-          placeholder: "text 1",
-          colorPickerDisplayed:false,
-          style: {
-            width: 0,
-            height: 50,
-            top:0,
-            left:0
-          }
-        },
-        {
-          id: generateId(),
-          font: null,
-          color: "black",
-          body: '',
-          placeholder: "text 2",
-          colorPickerDisplayed:false,
-          style: {
-            width: 0,
-            height: 50,
-            top:0,
-            left:0
-          }
-        }
+        new Text("text 1"),
+        new Text("text 2")
       ]
     };
   }
@@ -125,7 +99,7 @@ class App extends Component {
   }
   addTextHandler = () => {
     this.setState(state => {
-      var newTexts = [...state.texts, new text()];
+      var newTexts = [...state.texts, new Text()];
       return { texts: newTexts };
     });
   };

@@ -104,6 +104,11 @@ class App extends Component {
     });
   };
   updateTextBoxStyle = (id, stylesToUpdate) => {
+    // var newText = {...this.state.texts[idx].style}
+    // var newTexts = [...this.state.text]
+    // newText[idx] = newText
+    // this.setState({texts:newTexts})
+
     this.setState(state => {
       var idxToUpdate = state.texts.findIndex(text => id === text.id);
       var newStyle = { ...state.texts[idxToUpdate].style };

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import DragableDivs from "../DragableDivs/DragableDivs";
 import "./CanvasContainer.css";
 
+import canvasService from '../../services/canvasService'
+
 class CanvasContainer extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +26,7 @@ class CanvasContainer extends Component {
     this.props.ref(null);
   }
   clearCanvas(canvas) {
-    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    canvasService.clearCanvas(canvas)
   }
   drawText = (canvas, text, val) => {
     var textToDraw = val ? val : text.body;
@@ -39,88 +41,30 @@ class CanvasContainer extends Component {
     ctx.fillText(textToDraw, drawCoordX, drawCoordY);
   };
   drawTexts = (canvas, texts) => {
-    texts.forEach(text => {
-      this.drawText(canvas, text);
-    });
+    canvasService.drawTexts(canvas, texts)
   };
   getImgHandler = (e, fileToUpload) => {
-    var reader = new FileReader();
-    reader.addEventListener(
-      "load",
-      () => {
-        this.img.current.src = reader.result;
-      },
-      false
-    );
-    var file = fileToUpload || this.fileInput.current.files[0];
-    if (file) {
-      reader.readAsDataURL(file);
-      this.img.current.onload = this.drawImgToCanvas;
-    }
-    // console.log(this.fileInput.current.files[0]
+    canvasService.getImgHandler(fileToUpload,this.img.current,
+      this.canvas.current,this.drawingCanvas.current,this.fileInput.current)
+  //   var reader = new FileReader();
+  //   reader.addEventListener(
+  //     "load",
+  //     () => {
+  //       this.img.current.src = reader.result;
+  //     },
+  //     false
+  //   );
+  //   var file = fileToUpload || this.fileInput.current.files[0];
+  //   if (file) {
+  //     reader.readAsDataURL(file);
+  //     this.img.current.onload = this.drawImgToCanvas;
+  //   }
+  //   // console.log(this.fileInput.current.files[0]
   };
   drawImgToCanvas = () => {
-    var ctx = this.canvas.current.getContext("2d");
-    var sizes = this.getScaledImgSize(
-      this.img.current.width,
-      this.img.current.height,
-      400,
-      400
-    );
-    this.canvas.current.height = sizes.height;
-    this.canvas.current.width = sizes.width;
-    this.drawingCanvas.current.height = sizes.height;
-    this.drawingCanvas.current.width = sizes.width;
-    // console.log(sizes)
-    this.setState(state => {
-      return {
-        ...state,
-        sizes
-      };
-    });
-    var textBoxTop = sizes.height - 50;
-
-    this.props.updateTextBoxStyle(this.props.texts[0].id, {
-      top: 0,
-      left: 0,
-      width: sizes.width / 2,
-      height: 50
-    });
-    this.props.updateTextBoxStyle(this.props.texts[1].id, {
-      top: textBoxTop,
-      left: 0,
-      width: sizes.width / 2,
-      height: 50
-    });
-    ctx.drawImage(this.img.current, 0, 0, sizes.width, sizes.height);
+    canvasService.drawImgToCanvas(this.canvas.current,this.drawingCanvas.current,this.img.current,this.drawingCanvas.current)
   };
-  getScaledImgSize = (width, height, maxHeight, maxWidth) => {
-    var scaledWidth, scaledHeight, higherValue;
-    higherValue = width >= height ? "width" : "height";
-    if (higherValue === "width") {
-      if (width >= maxWidth) {
-        scaledWidth = maxWidth;
-        scaledHeight = height / (width / maxWidth);
-      }
-    } else if (height > maxHeight) {
-      scaledHeight = maxHeight;
-      scaledWidth = width / (height / maxHeight);
-    } else {
-      scaledHeight = height;
-      scaledWidth = width;
-    }
-    console.log(
-      "original relation:",
-      width / height,
-      "scaled relation:",
-      scaledWidth / scaledHeight,
-      "scaled width",
-      width,
-      "scaled height",
-      height
-    );
-    return { width: scaledWidth, height: scaledHeight };
-  };
+ 
   render() {
     return (
       <div className="canvas-container">

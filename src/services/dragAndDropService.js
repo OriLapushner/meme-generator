@@ -1,18 +1,21 @@
 import interact from 'interactjs'
+
+//keeps track of text positions
+const textPositions = []
+var resizeHandler = null
 function removeListeners(textId){
   interact('#drag' + textId).unset()
 }
 
-function TextPosition(textId, posX = 0, posY = 0){
-  this.id = textId
+function TextPosition(id, posX = 0, posY = 0){
+  this.id = id
   this.posX = posX,
   this.posY = posY
 }
  
-const textPositions = []
-function makeDragableResizeable(textId, posX, posY){
-  textPositions.push(new TextPosition(textId, posX, posY))
-  interact('#drag' + textId)
+function makeDragableResizeable(id, posX, posY){
+  textPositions.push(new TextPosition(id, posX, posY))
+  interact('#drag' + id)
   .draggable({
     onmove: dragMoveListener,
     restrict: {
@@ -48,10 +51,11 @@ function makeDragableResizeable(textId, posX, posY){
     
     target.style.width  = event.rect.width + 'px';
     target.style.height = event.rect.height + 'px';
-
-    // translate when resizing from top or left edges
+    // canvasService.drawTexts()
+    // handle resizing movement from top and left corners
     target.style.left = textPos.posX + 'px'
     target.style.top = textPos.posY + 'px'
+    resizeHandler()
   });
 
   function dragMoveListener (event) {
@@ -61,14 +65,18 @@ function makeDragableResizeable(textId, posX, posY){
     //give positions data update
     textPos.posX += event.dx
     textPos.posY += event.dy
-        
     //give style to elements
     target.style.left = textPos.posX + 'px'
     target.style.top = textPos.posY + 'px'
+    resizeHandler()     
   }
+}
+function setResizeHandler(handler){
+  resizeHandler = handler
 }
 
 export default {
+  setResizeHandler,
   removeListeners,
   makeDragableResizeable,
   textPositions

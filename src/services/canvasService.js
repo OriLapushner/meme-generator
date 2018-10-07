@@ -1,6 +1,6 @@
+import dragService from './dragAndDropService'
 
 const drawImgToCanvas = (canvas, textCanvas ,img) => {
-  console.log(img.width)
     var ctx = canvas.getContext("2d");
     var sizes = getScaledImgSize(
       img.width,
@@ -8,29 +8,8 @@ const drawImgToCanvas = (canvas, textCanvas ,img) => {
       400,
       400
     );
-    resizeElement(canvas, 300, 300)
+    resizeElement(canvas, sizes.width, sizes.height)
     resizeElement(textCanvas, sizes.width, sizes.height)
-    // console.log(sizes)
-    // this.setState(state => {
-    //   return {
-    //     ...state,
-    //     sizes
-    //   };
-    // });
-    // var textBoxTop = sizes.height - 50;
-    // this.props.updateTextBoxStyle(this.props.texts[0].id, {
-    //     top: 0,
-    //     left: 0,
-    //     width: sizes.width / 2,
-    //     height: 50
-    //   });
-    //   this.props.updateTextBoxStyle(this.props.texts[1].id, {
-    //     top: textBoxTop,
-    //     left: 0,
-    //     width: sizes.width / 2,
-    //     height: 50
-    //   });
-    console.log(img,sizes)
     ctx.drawImage(img, 0, 0, sizes.width, sizes.height);
 
 }
@@ -38,16 +17,27 @@ const resizeElement = (element, width, height) => {
     element.width = width
     element.height = height
 }
+
+const getTexts = (texts) => {
+
+}
+
 const drawTexts = (canvas,texts) => {
     var ctx = canvas.getContext("2d");
-    ctx.font = "30px Arial";
     ctx.textAlign = "center";
-    // ctx.textBaseline = 'top';
-    // console.log(ctx.measureText(text));
+    ctx.textBaseline = 'middle';
     texts.forEach(text => {
-        ctx.fillStyle = text.color;
-      var drawCoordX = text.style.left + text.style.width / 2;
-      var drawCoordY = text.style.top + text.style.height / 2;
+      ctx.fillStyle = text.color;
+      var pos = dragService.textPositions.find(textPos => textPos.id === text.id)
+      var dragable = document.querySelector('#drag' + pos.id)
+      // ctx.font = "30px Arial";
+      console.log(text.fontSize + text.font)
+      ctx.font = text.fontSize + ' ' +  text.font;
+      // console.log(ctx.measureText(text.body).width)
+      // if(dragable.offsetWidth > 5 + ctx.measureText(text.body)) ctx.font = "15px Arial"
+        
+      var drawCoordX = pos.posX + dragable.offsetWidth / 2;
+      var drawCoordY = pos.posY + dragable.offsetHeight / 2;
       ctx.fillText(text.body, drawCoordX, drawCoordY);
     });
   };
@@ -77,7 +67,6 @@ const drawTexts = (canvas,texts) => {
         //   "scaled height",
         //   height
         // );
-        console.log(width,height)
     return { width: scaledWidth, height: scaledHeight };
   };
 
@@ -97,10 +86,8 @@ const drawTexts = (canvas,texts) => {
     var file = fileToUpload || fileInput.files[0];
     if (file) {
         reader.readAsDataURL(file);
-        img.onload = drawImgToCanvas(canvas, textCanvas, img);
+        img.onload = () => drawImgToCanvas(canvas, textCanvas, img);
     }
-    // console.log(img.width)
-    // console.log(fileInput.files[0])
   };
   export default {
       getImgHandler,

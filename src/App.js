@@ -8,19 +8,15 @@ function generateId() {
   return Math.floor(Math.random() * 1000000);
 }
 
-function Text(placeholder){
+function Text(placeholder,font){
+  //text constructor
   this.id = generateId()
-  this.font = null,
+  this.font = "Arial",
+  this.fontSize = "30px"
   this.color = "black",
   this.body = "",
   this.placeholder = placeholder || "new text" ,
-  this.colorPickerDisplayed = false,
-  this.style = {
-    width: 0,
-    height: 50,
-    top:0,
-    left:0
-  }
+  this.colorPickerDisplayed = false
 }
 
 class App extends Component {
@@ -36,6 +32,7 @@ class App extends Component {
   }
   colorChangedHandler = (color,id) => {
     this.updateTextProps(id,{color})
+    this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current,this.state.texts)
     this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,this.state.texts)
   }
   colorPickerClickedHandler = (id) => {
@@ -46,11 +43,8 @@ class App extends Component {
     } else {
       this.updateTextProps(id,{colorPickerDisplayed:true})
       document.onmousedown = (e) => {
-        // console.log(e)
-        // console.log(this.updateTextProps)
         var colorPickerPathed =  e.path.findIndex(element =>{
           if(element.classList){
-            // console.log(element.classList[0] === "color-picker-container")
             return element.classList[0] === "color-picker-container" ||
              element.classList[0] === "txt-color-button"
           } else return false
@@ -64,10 +58,8 @@ class App extends Component {
          }
       }
     }
-    // this.updateTextProps(id,{colorPickerDisplayed:!this.state.colorPickerDisplayed})
   }
   updateTextProps = (id,newTextProps) => {
-    // console.log('update text')
     this.setState(state => {
       var idx = state.texts.findIndex( text => text.id === id)
     var newTexts = [...state.texts]
@@ -86,16 +78,13 @@ class App extends Component {
       var idx = state.texts.findIndex(text => id === text.id)
       var newTexts = [...state.texts]
       newTexts[idx].body = val
+      this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
+      this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,newTexts)
       return {
         ...state,
         texts:[...newTexts],
       }
     })
-    var textToUpdate = this.state.texts.find( text => text.id === id)
-    var textsToUpdate = this.state.texts.filter(text => text.id !== id)
-    this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
-    this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,textsToUpdate)
-    this.canvasRef.drawText(this.canvasRef.drawingCanvas.current,textToUpdate,val)
   }
   addTextHandler = () => {
     this.setState(state => {
@@ -104,11 +93,6 @@ class App extends Component {
     });
   };
   updateTextBoxStyle = (id, stylesToUpdate) => {
-    // var newText = {...this.state.texts[idx].style}
-    // var newTexts = [...this.state.text]
-    // newText[idx] = newText
-    // this.setState({texts:newTexts})
-
     this.setState(state => {
       var idxToUpdate = state.texts.findIndex(text => id === text.id);
       var newStyle = { ...state.texts[idxToUpdate].style };

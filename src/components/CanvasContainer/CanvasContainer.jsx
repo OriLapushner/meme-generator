@@ -3,6 +3,7 @@ import DragableDivs from "../DragableDivs/DragableDivs";
 import "./CanvasContainer.css";
 
 import canvasService from '../../services/canvasService'
+import dragAndDropService from "../../services/dragAndDropService";
 
 class CanvasContainer extends Component {
   constructor(props) {
@@ -21,7 +22,12 @@ class CanvasContainer extends Component {
   }
   componentDidMount() {
     this.props.getRef(this);
+    dragAndDropService.setResizeHandler(() => {
+      this.clearCanvas(this.drawingCanvas.current)
+      this.drawTexts(this.drawingCanvas.current,this.props.texts)
+    })
   }
+
   componentWillUnmount() {
     this.props.ref(null);
   }
@@ -46,20 +52,6 @@ class CanvasContainer extends Component {
   getImgHandler = (e, fileToUpload) => {
     canvasService.getImgHandler(fileToUpload,this.img.current,
       this.canvas.current,this.drawingCanvas.current,this.fileInput.current)
-  //   var reader = new FileReader();
-  //   reader.addEventListener(
-  //     "load",
-  //     () => {
-  //       this.img.current.src = reader.result;
-  //     },
-  //     false
-  //   );
-  //   var file = fileToUpload || this.fileInput.current.files[0];
-  //   if (file) {
-  //     reader.readAsDataURL(file);
-  //     this.img.current.onload = this.drawImgToCanvas;
-  //   }
-  //   // console.log(this.fileInput.current.files[0]
   };
   drawImgToCanvas = () => {
     canvasService.drawImgToCanvas(this.canvas.current,this.drawingCanvas.current,this.img.current,this.drawingCanvas.current)
@@ -70,6 +62,7 @@ class CanvasContainer extends Component {
       <div className="canvas-container">
         <img
           ref="img"
+          className="ss"
           className="hidden"
           src={this.state.imgSrc}
           ref={this.img}
@@ -79,7 +72,7 @@ class CanvasContainer extends Component {
           texts={this.props.texts}
           canvasSize={this.state.sizes}
           updateTextBoxStyle={this.props.updateTextBoxStyle}
-        />
+          />
         <canvas className="canvas" ref={this.canvas} />
         <input
           type="file"

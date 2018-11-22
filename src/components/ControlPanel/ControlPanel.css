@@ -1,5 +1,19 @@
-.control-panel{
-height: 400px;
-width: 400px;
-display: inline-block;
+.control-panel {
+    /* height: 400px;
+width: 400px; */
+    /* display: inline-block; */
+    display: grid;
+    grid-template: repeat(20, 5%) / repeat(20, 5%);
+    height: 300px;
+    width: 50%;
+    min-width: 350px;
+    max-width: 400px;
+}
+
+.download-btn {
+    grid-area: 1 / 1 / 4 / 8
+}
+
+.add-text-button {
+    grid-area: 1 / 9 / 4 / 14
 }

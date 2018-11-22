@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import DragableDivs from "../DragableDivs/DragableDivs";
 import "./CanvasContainer.css";
 
-import canvasService from '../../services/canvasService'
+import canvasService from "../../services/canvasService";
 import dragAndDropService from "../../services/dragAndDropService";
 
 class CanvasContainer extends Component {
@@ -13,57 +13,60 @@ class CanvasContainer extends Component {
     this.canvas = React.createRef();
     this.drawingCanvas = React.createRef();
     this.state = {
-      imgSrc: null,
-      sizes: {
-        width: 0,
-        height: 0
-      }
+      imgSrc: null
     };
   }
   componentDidMount() {
     this.props.getRef(this);
-    dragAndDropService.setResizeHandler(() => {
-      this.clearCanvas(this.drawingCanvas.current)
+    dragAndDropService.setTextChangeHandler(() => {
+      this.clearCanvas(this.drawingCanvas.current);
       this.drawTexts(this.drawingCanvas.current,this.props.texts)
-    })
+    });
+    canvasService.setMainCanvas(this.canvas.current);
+    canvasService.setDrawingCanvas(this.drawingCanvas.current);
+    canvasService.setdrawImgHandler(this.initDivs)
   }
-
+  initDivs = () => {
+    //sets text divs dragables at center bottom and top
+    var textBox1 = document.querySelector("#drag" + this.props.texts[0].id)
+    var textBox2 = document.querySelector("#drag" + this.props.texts[1].id)
+    textBox1.style.width = this.drawingCanvas.current.width / 2 + "px"
+    textBox2.style.width = this.drawingCanvas.current.width / 2 + "px"
+    var xpos = this.drawingCanvas.current.width/2 - textBox1.offsetWidth/2 
+    var ypos = this.drawingCanvas.current.height - textBox1.offsetHeight
+    
+    dragAndDropService.setTextPosition(this.props.texts[0].id,xpos,0)
+    dragAndDropService.setTextPosition(this.props.texts[1].id,xpos,ypos)
+    // console.log(this.drawingCanvas.current.width)
+    // dragAndDropService.setTextPosition(id2,30,30)
+    
+  }
   componentWillUnmount() {
     this.props.ref(null);
   }
   clearCanvas(canvas) {
-    canvasService.clearCanvas(canvas)
+    canvasService.clearCanvas(canvas);
   }
-  drawText = (canvas, text, val) => {
-    var textToDraw = val ? val : text.body;
-    var ctx = canvas.getContext("2d");
-    ctx.font = "30px Arial";
-    ctx.fillStyle = text.color;
-    ctx.textAlign = "center";
-    // ctx.textBaseline = 'top';
-    // console.log(ctx.measureText(text));
-    var drawCoordX = text.style.left + text.style.width / 2;
-    var drawCoordY = text.style.top + text.style.height / 2;
-    ctx.fillText(textToDraw, drawCoordX, drawCoordY);
-  };
   drawTexts = (canvas, texts) => {
-    canvasService.drawTexts(canvas, texts)
+    canvasService.drawTexts(canvas, texts);
   };
   getImgHandler = (e, fileToUpload) => {
-    canvasService.getImgHandler(fileToUpload,this.img.current,
-      this.canvas.current,this.drawingCanvas.current,this.fileInput.current)
+    canvasService.getImgHandler(
+      fileToUpload,
+      this.img.current,
+      this.fileInput.current
+    );
   };
-  drawImgToCanvas = () => {
-    canvasService.drawImgToCanvas(this.canvas.current,this.drawingCanvas.current,this.img.current,this.drawingCanvas.current)
+  drawImgToCanvas = (img = this.img.current) => {
+    canvasService.drawImgToCanvas(img);
   };
- 
+
   render() {
     return (
       <div className="canvas-container">
         <img
           ref="img"
-          className="ss"
-          className="hidden"
+          className="canvas-img hidden"
           src={this.state.imgSrc}
           ref={this.img}
         />
@@ -72,8 +75,8 @@ class CanvasContainer extends Component {
           texts={this.props.texts}
           canvasSize={this.state.sizes}
           updateTextBoxStyle={this.props.updateTextBoxStyle}
-          />
-        <canvas className="canvas" ref={this.canvas} />
+        />
+        <canvas className="canvas main-canvas" ref={this.canvas} />
         <input
           type="file"
           accept="image/*"

@@ -1,0 +1,16 @@
+.img-picker-container {
+    grid-area: 1 / 18 / 21 / 20;
+    min-height: 220px;
+    max-height: 600px;
+    overflow-y: scroll;
+    width: 55px;
+}
+
+.img-picker-container img {
+    height: 40px;
+    width: 40px;
+}
+.img-picker-container::-webkit-scrollbar {
+    /* width: 10px; */
+    background-color: #f5f5f5;
+}

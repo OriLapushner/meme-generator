@@ -1,6 +1,6 @@
 .dragable{
-    height: 100px;
-    width: 100px;
+    height: 40px;
+    width: 60px;
     border: 1px solid green;
     position: absolute;
     /* display: inline; */

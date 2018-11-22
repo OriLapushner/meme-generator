@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import ControlPanel from "./components/ControlPanel/ControlPanel.jsx";
 import CanvasContainer from "./components/CanvasContainer/CanvasContainer";
+import imgsSrcList from './services/imgsService'
 import "./App.css";
-import "bulma/css/bulma.css";
 
+// google key to web fonts: AIzaSyAERA7bb7EV8f4WUekp3-jaA4CrccIz6VY
 function generateId() {
   return Math.floor(Math.random() * 1000000);
 }
@@ -12,7 +13,7 @@ function Text(placeholder,font){
   //text constructor
   this.id = generateId()
   this.font = "Arial",
-  this.fontSize = "30px"
+  this.fontSize = "30"
   this.color = "black",
   this.body = "",
   this.placeholder = placeholder || "new text" ,
@@ -27,7 +28,8 @@ class App extends Component {
       texts: [
         new Text("text 1"),
         new Text("text 2")
-      ]
+      ],
+      imgsSrcs: imgsSrcList
     };
   }
   colorChangedHandler = (color,id) => {
@@ -58,6 +60,16 @@ class App extends Component {
          }
       }
     }
+  }
+  fontSizeChangedHandler = (val,id) => {
+    this.setState(state => {
+      var newTexts = [...state.texts]
+      var textToUpdate = newTexts.find(text => text.id === id)
+      textToUpdate.fontSize = val
+      this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
+      this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,newTexts)
+      return {...state,newTexts}
+    })
   }
   updateTextProps = (id,newTextProps) => {
     this.setState(state => {
@@ -139,9 +151,11 @@ class App extends Component {
           getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
+          imgsSrcs={this.state.imgsSrcs}
           colorChangedHandler={this.colorChangedHandler}
           updateTextProps={this.updateTextProps}        
           updateTextBody={this.updateTextBody}
+          fontSizeChangedHandler={this.fontSizeChangedHandler}
           texts={this.state.texts}
           addTextHandler={this.addTextHandler}
           saveImg={this.saveImg}

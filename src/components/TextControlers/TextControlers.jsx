@@ -8,6 +8,7 @@ return <div className='text-controlers'>{props.texts.map(textInfo => {
     key={textInfo.id}
     colorPickerClickedHandler={props.colorPickerClickedHandler}
     colorChangedHandler={props.colorChangedHandler}
+    fontSizeChangedHandler={props.fontSizeChangedHandler}
     updateTextProps={props.updateTextProps}/>
 })}</div>
 }

@@ -1,7 +1,5 @@
 .canvas-container {
-    position: relative;
-    width: 410px;
-    display: inline-block;
+width:400px;
 }
 
 .drawing-canvas {

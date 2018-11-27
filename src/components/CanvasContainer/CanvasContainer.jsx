@@ -18,29 +18,28 @@ class CanvasContainer extends Component {
   }
   componentDidMount() {
     this.props.getRef(this);
+    dragAndDropService.setTextBoxesContainer(this.canvas.current)
     dragAndDropService.setTextChangeHandler(() => {
       this.clearCanvas(this.drawingCanvas.current);
-      this.drawTexts(this.drawingCanvas.current,this.props.texts)
+      this.drawTexts(this.drawingCanvas.current, this.props.texts);
     });
     canvasService.setMainCanvas(this.canvas.current);
     canvasService.setDrawingCanvas(this.drawingCanvas.current);
-    canvasService.setdrawImgHandler(this.initDivs)
+    canvasService.setdrawImgHandler(this.initDivs);
+    this.initDivs()
   }
   initDivs = () => {
     //sets text divs dragables at center bottom and top
-    var textBox1 = document.querySelector("#drag" + this.props.texts[0].id)
-    var textBox2 = document.querySelector("#drag" + this.props.texts[1].id)
-    textBox1.style.width = this.drawingCanvas.current.width / 2 + "px"
-    textBox2.style.width = this.drawingCanvas.current.width / 2 + "px"
-    var xpos = this.drawingCanvas.current.width/2 - textBox1.offsetWidth/2 
-    var ypos = this.drawingCanvas.current.height - textBox1.offsetHeight
-    
-    dragAndDropService.setTextPosition(this.props.texts[0].id,xpos,0)
-    dragAndDropService.setTextPosition(this.props.texts[1].id,xpos,ypos)
-    // console.log(this.drawingCanvas.current.width)
-    // dragAndDropService.setTextPosition(id2,30,30)
-    
-  }
+    var textBox1 = document.querySelector("#drag" + this.props.texts[0].id);
+    var textBox2 = document.querySelector("#drag" + this.props.texts[1].id);
+    textBox1.style.width = this.drawingCanvas.current.width / 2 + "px";
+    textBox2.style.width = this.drawingCanvas.current.width / 2 + "px";
+    var xpos = this.drawingCanvas.current.width / 2 - textBox1.offsetWidth / 2;
+    var ypos = this.drawingCanvas.current.height - textBox1.offsetHeight;
+
+    dragAndDropService.setTextPosition(this.props.texts[0].id, xpos, 0);
+    dragAndDropService.setTextPosition(this.props.texts[1].id, xpos, ypos);
+  };
   componentWillUnmount() {
     this.props.ref(null);
   }

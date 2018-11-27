@@ -14,6 +14,10 @@ class DragableDiv extends Component {
         id={"drag" + this.props.text.id}
         className="dragable"
         >
+        <div className="resizer left-resizer bot-resizer" id={"tr" + this.props.text.id}></div>
+        <div className="resizer left-resizer top-resizer" id={"tl" + this.props.text.id}></div>
+        <div className="resizer right-resizer bot-resizer" id={"br" + this.props.text.id}></div>
+        <div className="resizer right-resizer top-resizer" id={"bl" + this.props.text.id}></div>
       </div>
     );
   }

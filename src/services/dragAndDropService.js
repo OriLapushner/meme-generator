@@ -2,10 +2,19 @@ import interact from 'interactjs'
 
 //keeps track of text positions
 const textPositions = []
+//function that is invoked after text position change
 var textChangeHandler = null
+// a container to be contained in when moving divs
+var textBoxesContainer = null
 
 function removeListeners(textId) {
   interact('#drag' + textId).unset()
+}
+
+function setTextBoxPosition(target,left,top){
+  console.log(textBoxesContainer.offsetTop)
+  target.style.left = left + textBoxesContainer.offsetLeft + 'px'
+  target.style.top = top + textBoxesContainer.offsetTop + 'px'
 }
 
 function TextPosition(id, posX = 0, posY = 0) {
@@ -13,17 +22,20 @@ function TextPosition(id, posX = 0, posY = 0) {
   this.posX = posX,
   this.posY = posY
 }
-
+function setTextBoxesContainer(container){
+  textBoxesContainer = container
+}
 function setTextPosition(id, posX, posY) {
   console.log(posX, posY)
   var text = textPositions.find((text) => text.id === id)
   text.posX = posX
   text.posY = posY
-  textChangeHandler()
   var textBox = document.querySelector('#drag' + text.id)
-  textBox.style.left = posX + 'px'
-  textBox.style.top = posY + 'px'
+  console.log(posX,posY)
+  setTextBoxPosition(textBox,posX,posY)
+  textChangeHandler()
 }
+
 
 function makeDragableResizeable(id, posX, posY) {
   textPositions.push(new TextPosition(id, posX, posY))
@@ -43,10 +55,10 @@ function makeDragableResizeable(id, posX, posY) {
     .resizable({
       // resize from all edges and corners
       edges: {
-        left: true,
-        right: true,
-        bottom: true,
-        top: true
+        left: ".left-resizer",
+        right: ".right-resizer",
+        bottom: ".bot-resizer",
+        top: ".top-resizer"
       },
 
       // keep the edges inside the parent
@@ -71,14 +83,14 @@ function makeDragableResizeable(id, posX, posY) {
       var id = +event.target.id.substring(4)
       var textPos = textPositions.find(textpos => id === textpos.id)
       // update the element's style
+      console.log(event)
       textPos.posX += event.deltaRect.left;
       textPos.posY += event.deltaRect.top;
 
       target.style.width = event.rect.width + 'px';
       target.style.height = event.rect.height + 'px';
       // handle resizing movement from top and left corners
-      target.style.left = textPos.posX + 'px'
-      target.style.top = textPos.posY + 'px'
+      setTextBoxPosition(target,textPos.posX,textPos.posY)
       textChangeHandler()
     });
 
@@ -90,8 +102,7 @@ function makeDragableResizeable(id, posX, posY) {
     textPos.posX += event.dx
     textPos.posY += event.dy
     //give style to elements
-    target.style.left = textPos.posX + 'px'
-    target.style.top = textPos.posY + 'px'
+    setTextBoxPosition(target,textPos.posX,textPos.posY)
     textChangeHandler()
   }
 }
@@ -101,6 +112,8 @@ function setTextChangeHandler(handler) {
 }
 
 export default {
+  setTextBoxPosition,
+  setTextBoxesContainer,
   setTextChangeHandler,
   removeListeners,
   makeDragableResizeable,

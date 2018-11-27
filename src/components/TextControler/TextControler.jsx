@@ -17,7 +17,7 @@ const TextControler = props => {
           <option>font 2</option>
         </select>
       </div>
-      font-size:
+      <span>font-size:</span>
       <input className="font-size-txt-input" type="number" value={props.textInfo.fontSize}
       className="font-size-txt-input"
          onChange={(event) => props.fontSizeChangedHandler(event.target.value,props.textInfo.id)}>
@@ -28,7 +28,7 @@ const TextControler = props => {
       
       <ColorPicker textInfo={props.textInfo}
       colorChangedHandler={props.colorChangedHandler}/>
-      <button>advanced</button>
+      <button className="button-default">more</button>
       </div>
     </div>
   );

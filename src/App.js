@@ -145,6 +145,7 @@ class App extends Component {
   render() {
     return (
       <div className="App" onDragOver={this.onDragHandler} onDrop={this.onDropHandler}>
+      <h3>you can upload an image by dragging it to the screen</h3>
         <CanvasContainer
           texts={this.state.texts}
           updateTextBoxStyle={this.updateTextBoxStyle}

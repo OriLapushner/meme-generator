@@ -32,3 +32,6 @@ body,.App,#root{
 	position:relative;
 	top:1px;
 }
+.instruction-text{
+	/* width:100%; */
+}

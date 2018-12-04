@@ -19,7 +19,6 @@ const TextControler = props => {
       </div>
       <span>font-size:</span>
       <input className="font-size-txt-input" type="number" value={props.textInfo.fontSize}
-      className="font-size-txt-input"
          onChange={(event) => props.fontSizeChangedHandler(event.target.value,props.textInfo.id)}>
          </input>
       <div className="txt-color-button rounded" style={{background:props.textInfo.color}}

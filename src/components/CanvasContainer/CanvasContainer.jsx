@@ -64,10 +64,10 @@ class CanvasContainer extends Component {
     return (
       <div className="canvas-container">
         <img
-          ref="img"
           className="canvas-img hidden"
           src={this.state.imgSrc}
           ref={this.img}
+          alt=""
         />
         <canvas className="canvas drawing-canvas" ref={this.drawingCanvas} />
         <DragableDivs

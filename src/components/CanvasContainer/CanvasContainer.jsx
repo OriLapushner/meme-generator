@@ -12,36 +12,26 @@ class CanvasContainer extends Component {
     this.img = React.createRef();
     this.canvas = React.createRef();
     this.drawingCanvas = React.createRef();
+    this.canvasContainer = React.createRef();
     this.state = {
       imgSrc: null
     };
   }
   componentDidMount() {
     this.props.getRef(this);
-    dragAndDropService.setTextBoxesContainer(this.canvas.current)
+    dragAndDropService.setTextBoxesContainer(this.canvas.current);
     dragAndDropService.setTextChangeHandler(() => {
       this.clearCanvas(this.drawingCanvas.current);
       this.drawTexts(this.drawingCanvas.current, this.props.texts);
     });
     canvasService.setMainCanvas(this.canvas.current);
     canvasService.setDrawingCanvas(this.drawingCanvas.current);
-    canvasService.setdrawImgHandler(this.initDivs);
-    this.initDivs()
+    canvasService.setCanvasContaier(this.canvasContainer.current);
+    canvasService.setdrawImgHandler(this.props.initDragableDivs);
+    this.props.initDragableDivs();
   }
-  initDivs = () => {
-    //sets text divs dragables at center bottom and top
-    var textBox1 = document.querySelector("#drag" + this.props.texts[0].id);
-    var textBox2 = document.querySelector("#drag" + this.props.texts[1].id);
-    textBox1.style.width = this.drawingCanvas.current.width / 2 + "px";
-    textBox2.style.width = this.drawingCanvas.current.width / 2 + "px";
-    var xpos = this.drawingCanvas.current.width / 2 - textBox1.offsetWidth / 2;
-    var ypos = this.drawingCanvas.current.height - textBox1.offsetHeight;
-
-    dragAndDropService.setTextPosition(this.props.texts[0].id, xpos, 0);
-    dragAndDropService.setTextPosition(this.props.texts[1].id, xpos, ypos);
-  };
   componentWillUnmount() {
-    this.props.ref(null);
+    this.props.getRef(null);
   }
   clearCanvas(canvas) {
     canvasService.clearCanvas(canvas);
@@ -62,7 +52,7 @@ class CanvasContainer extends Component {
 
   render() {
     return (
-      <div className="canvas-container">
+      <div className="canvas-container" ref={this.canvasContainer}>
         <img
           className="canvas-img hidden"
           src={this.state.imgSrc}
@@ -77,6 +67,7 @@ class CanvasContainer extends Component {
         />
         <canvas className="canvas main-canvas" ref={this.canvas} />
         <input
+          hidden
           type="file"
           accept="image/*"
           onChange={this.getImgHandler}

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ControlPanel from "./components/ControlPanel/ControlPanel.jsx";
 import CanvasContainer from "./components/CanvasContainer/CanvasContainer";
 import imgsSrcList from './services/imgsService'
+import dragAndDropService from "./services/dragAndDropService"
 import "./App.css";
 
 // google key to web fonts: AIzaSyAERA7bb7EV8f4WUekp3-jaA4CrccIz6VY
@@ -101,7 +102,7 @@ class App extends Component {
   addTextHandler = () => {
     this.setState(state => {
       var newTexts = [...state.texts, new Text()];
-      return { texts: newTexts };
+      return {...state, texts: newTexts };
     });
   };
   updateTextBoxStyle = (id, stylesToUpdate) => {
@@ -142,16 +143,55 @@ class App extends Component {
       this.canvasRef.getImgHandler(null,file)
     e.preventDefault()
   }
+  fireInputClickEvent = () => {
+    this.canvasRef.fileInput.current.click();
+  }
+  deleteText = (id) => {
+    this.setState(state => {
+      var newTexts = state.texts.slice()
+      var idx = state.texts.findIndex(text => id === text.id)
+      newTexts.splice(idx,1)
+      return {...state,texts:newTexts}
+    },function(){
+      dragAndDropService.deleteTextPosition(id)
+    })
+  }
+  initDragableDivs = () => {
+    this.setState(state => {
+      return {...state,texts:[new Text(),new Text()]}
+    },function(){
+      dragAndDropService.deleteAllTextPositions()
+      console.log(dragAndDropService.textPositions)
+      console.log(this.state.texts)
+      // console.log(this.state.texts)
+      var textBox1 = document.querySelector("#drag" + this.state.texts[0].id);
+      var textBox2 = document.querySelector("#drag" + this.state.texts[1].id);
+      textBox1.style.width = this.canvasRef.drawingCanvas.current.width / 2 + "px";
+      textBox2.style.width = this.canvasRef.drawingCanvas.current.width / 2 + "px";
+      var xpos = this.canvasRef.drawingCanvas.current.width / 2 - textBox1.offsetWidth / 2;
+      var ypos = this.canvasRef.drawingCanvas.current.height - textBox1.offsetHeight;
+      console.log(xpos,ypos)
+      dragAndDropService.addTextPosition(this.state.texts[0].id, xpos, 0)
+      dragAndDropService.addTextPosition(this.state.texts[1].id, xpos, ypos)
+      dragAndDropService.setTextPosition(this.state.texts[0].id, xpos, 0);
+      dragAndDropService.setTextPosition(this.state.texts[1].id, xpos, ypos);
+    })
+    //sets 2 text divs dragables at center bottom and top
+
+  };
   render() {
     return (
       <div className="App" onDragOver={this.onDragHandler} onDrop={this.onDropHandler}>
       <h3 className="instruction-text">you can upload an image by dragging it to the screen</h3>
         <CanvasContainer
+          initDragableDivs={this.initDragableDivs}
           texts={this.state.texts}
           updateTextBoxStyle={this.updateTextBoxStyle}
           getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
+          deleteText={this.deleteText}
+          fireInputClickEvent={this.fireInputClickEvent}
           imgsSrcs={this.state.imgsSrcs}
           colorChangedHandler={this.colorChangedHandler}
           updateTextProps={this.updateTextProps}        

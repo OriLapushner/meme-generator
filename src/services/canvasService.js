@@ -7,9 +7,16 @@ minWidth:150
 }
 
 var imgDrawHandler = null
-var mainCanvas
+var mainCanvas = null
 //main canvas for drawing
-var drawingCanvas
+var drawingCanvas = null
+
+// used to keep size of container to equal to canvas size
+var canvasContainer = null
+const setCanvasContaier = (container) => {
+canvasContainer = container
+}
+
 const setMainCanvas = (canvasRef) => {
   mainCanvas = canvasRef
 }
@@ -31,11 +38,10 @@ const drawImgToCanvas = (img) => {
     imgScalingRanges.maxHeight,
     imgScalingRanges.maxWidth
   );
+  //update canvases and their container size to fit image. 
   resizeCanvas(mainCanvas, sizes.width, sizes.height)
   resizeCanvas(drawingCanvas, sizes.width, sizes.height)
-  var canvasContainer = document.querySelector('.canvas-container')
-  canvasContainer.style.width = sizes.width + 'px'
-  canvasContainer.style.height = sizes.height + 'px'
+  resizeElement(canvasContainer, sizes.width, sizes.height)
   ctx.drawImage(img, 0, 0, sizes.width, sizes.height);
   imgDrawHandler()
 
@@ -43,6 +49,10 @@ const drawImgToCanvas = (img) => {
 const resizeCanvas = (element, width, height) => {
   element.width = width
   element.height = height
+}
+const resizeElement = (element, width, height) => {
+element.style.width = width + "px"
+element.style.height = height + "px"
 }
 
 const drawTexts = (canvas, texts) => {
@@ -57,13 +67,32 @@ const drawTexts = (canvas, texts) => {
     ctx.font = text.fontSize + 'px ' + text.font;
     // console.log(ctx.measureText(text.body).width)
     // if(dragable.offsetWidth > 5 + ctx.measureText(text.body)) ctx.font = "15px Arial"
-
+    // console.log(ctx.measureText(text.body))
+    // console.log(measureTextHeight(text.body,text.fontSize,text.font))
     var drawCoordX = pos.posX + dragable.offsetWidth / 2;
     var drawCoordY = pos.posY + dragable.offsetHeight / 2;
     ctx.fillText(text.body, drawCoordX, drawCoordY);
   });
 };
-
+const measureTextHeight = (text,fontType,fontSize) =>{
+  //creates a span containing text to measure
+  var span = document.createElement("span");
+  span.innerText = text
+  span.style = "fontFamily: " + fontType + " fontSize: " + fontSize + "px"
+  //creates a block display div to measure by
+  var block = document.createElement("div")
+  block.style = "display: inline-block; width: 1px; height: 0px;"
+  //contain both elements in a containing div
+  var div = document.createElement("div")
+  var body = document.querySelector("body")
+  div.appendChild(span,block)
+  body.appendChild(div)
+  block.style = " verticalAlign: bottom";
+  console.log(block.offsetTop)
+  var height = block.offsetTop - span.offsetTop;
+  body.removeChild(div)
+  return height
+}
 const getScaledImgSize = (width, height, maxHeight, maxWidth) => {
   var scaledWidth, scaledHeight, higherValue;
   higherValue = width >= height ? "width" : "height";
@@ -116,6 +145,7 @@ const getImgHandler = (fileToUpload, img,fileInput) => {
   }
 };
 export default {
+  setCanvasContaier,
   setMainCanvas,
   setDrawingCanvas,
   getImgHandler,

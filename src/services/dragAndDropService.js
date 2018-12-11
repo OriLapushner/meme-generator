@@ -9,8 +9,21 @@ var textChangeHandler = null
 var textBoxesContainer = null
 
 var containerPos = {
-  x:null,
-  y:null
+  x: null,
+  y: null
+}
+
+function deleteAllTextPositions(){
+  var length = textPositions.length
+  for(var i = length; i < 0; i--){
+    deleteTextPosition(textPositions[i].id)
+  }
+}
+function deleteTextPosition(id) {
+  removeListeners(id)
+  var idx = textPositions.findIndex(textPos => textPos.id === id)
+  textPositions.splice(idx, 1)
+  console.log(idx)
 }
 
 function removeListeners(textId) {
@@ -24,8 +37,8 @@ function setTextBoxPosition(target, left, top) {
 
 function TextPosition(id, posX = 0, posY = 0) {
   this.id = id
-  this.posX = posX,
-    this.posY = posY
+  this.posX = posX
+  this.posY = posY
 }
 
 function setTextBoxesContainer(container) {
@@ -34,11 +47,13 @@ function setTextBoxesContainer(container) {
     posX: container.offsetLeft,
     posY: container.offsetTop
   }
+
+  //on resize event,updates text boxes
   window.onresize = function () {
-    if(textBoxesContainer.offsetLeft == containerPos.x &&
+    if (textBoxesContainer.offsetLeft == containerPos.x &&
       textBoxesContainer.offsetTop == containerPos.y) return
-      containerPos.x = container.offsetLeft
-      containerPos.y = container.offsetTop
+    containerPos.x = container.offsetLeft
+    containerPos.y = container.offsetTop
     textPositions.forEach(text => setTextPosition(text.id, text.posX, text.posY))
   }
 }
@@ -52,9 +67,12 @@ function setTextPosition(id, posX, posY) {
   textChangeHandler()
 }
 
-
+function addTextPosition(id, posX, posY){
+  console.log("add text pos")
+textPositions.push(new TextPosition(id, posX, posY))
+}
 function makeDragableResizeable(id, posX, posY) {
-  textPositions.push(new TextPosition(id, posX, posY))
+  // addTextPosition(id, posX, posY)
   interact('#drag' + id)
     .draggable({
       onmove: dragMoveListener,
@@ -114,8 +132,6 @@ function makeDragableResizeable(id, posX, posY) {
     var id = +event.target.id.substring(4)
     var textPos = textPositions.find(textPos => textPos.id === id)
     //give positions data update
-    console.log("dx:", event.dx, "dy:", event.dy)
-    console.log("x pos:", textPos.posX, "y pos:", textPos.posY)
     textPos.posX += event.dx
     textPos.posY += event.dy
     setTextBoxPosition(target, textPos.posX, textPos.posY)
@@ -128,6 +144,9 @@ function setTextChangeHandler(handler) {
 }
 
 export default {
+  addTextPosition,
+  deleteTextPosition,
+  deleteAllTextPositions,
   setTextBoxPosition,
   setTextBoxesContainer,
   setTextChangeHandler,

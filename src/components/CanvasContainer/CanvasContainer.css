@@ -1,5 +1,6 @@
 .canvas-container {
 width:400px;
+border:1px solid black;
 }
 
 .drawing-canvas {
@@ -8,7 +9,7 @@ width:400px;
 
 .canvas {
     display: inline;
-    border: 1px solid black;
+    /* border: 1px solid black; */
 }
 
 img {

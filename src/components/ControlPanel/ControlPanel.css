@@ -15,5 +15,8 @@ width: 400px; */
 }
 
 .add-text-button {
-    grid-area: 1 / 9 / 4 / 14
+    grid-area: 1 / 9 / 4 / 12
+}
+.upload-img-button{
+    grid-area: 1 / 13 / 4 / 16
 }

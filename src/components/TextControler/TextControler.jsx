@@ -27,7 +27,7 @@ const TextControler = props => {
       
       <ColorPicker textInfo={props.textInfo}
       colorChangedHandler={props.colorChangedHandler}/>
-      <button className="button-default">more</button>
+      <button onClick={() => props.deleteText(props.textInfo.id)} className="button-default">Delete</button>
       </div>
     </div>
   );

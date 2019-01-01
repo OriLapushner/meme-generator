@@ -8,24 +8,29 @@ var textChangeHandler = null
 // a container to be contained in when moving divs
 var textBoxesContainer = null
 
+var minWidth = 60
+var minHeight = 14
+
 var containerPos = {
   x: null,
   y: null
 }
 
-function deleteAllTextPositions(){
+function deleteAllTextPositions() {
   var length = textPositions.length
-  for(var i = length; i < 0; i--){
+  for (var i = length - 1; i >= 0; i--) {
     deleteTextPosition(textPositions[i].id)
   }
 }
+
 function deleteTextPosition(id) {
   removeListeners(id)
   var idx = textPositions.findIndex(textPos => textPos.id === id)
   textPositions.splice(idx, 1)
-  console.log(idx)
 }
-
+function getPosition(id){
+  return textPositions.find(textPos => textPos.id === id)
+}
 function removeListeners(textId) {
   interact('#drag' + textId).unset()
 }
@@ -44,14 +49,13 @@ function TextPosition(id, posX = 0, posY = 0) {
 function setTextBoxesContainer(container) {
   textBoxesContainer = container
   containerPos = {
-    posX: container.offsetLeft,
-    posY: container.offsetTop
+    x: container.offsetLeft,
+    y: container.offsetTop
   }
-
   //on resize event,updates text boxes
-  window.onresize = function () {
-    if (textBoxesContainer.offsetLeft == containerPos.x &&
-      textBoxesContainer.offsetTop == containerPos.y) return
+  window.onresize = () => {
+    if (textBoxesContainer.offsetLeft === containerPos.x &&
+      textBoxesContainer.offsetTop === containerPos.y) return
     containerPos.x = container.offsetLeft
     containerPos.y = container.offsetTop
     textPositions.forEach(text => setTextPosition(text.id, text.posX, text.posY))
@@ -67,10 +71,10 @@ function setTextPosition(id, posX, posY) {
   textChangeHandler()
 }
 
-function addTextPosition(id, posX, posY){
-  console.log("add text pos")
-textPositions.push(new TextPosition(id, posX, posY))
+function addTextPosition(id, posX, posY) {
+  textPositions.push(new TextPosition(id, posX, posY))
 }
+
 function makeDragableResizeable(id, posX, posY) {
   // addTextPosition(id, posX, posY)
   interact('#drag' + id)
@@ -100,12 +104,11 @@ function makeDragableResizeable(id, posX, posY) {
         outer: 'parent',
         endOnly: true,
       },
-
       // minimum size
       restrictSize: {
         min: {
-          width: 100,
-          height: 50
+          width: minWidth,
+          height: minHeight
         },
       },
 
@@ -144,6 +147,7 @@ function setTextChangeHandler(handler) {
 }
 
 export default {
+  getPosition,
   addTextPosition,
   deleteTextPosition,
   deleteAllTextPositions,
@@ -152,6 +156,5 @@ export default {
   setTextChangeHandler,
   removeListeners,
   makeDragableResizeable,
-  textPositions,
   setTextPosition
 }

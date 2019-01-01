@@ -1,36 +1,35 @@
-import dragService from './dragAndDropService'
+import dragService from "./dragAndDropService";
 var imgScalingRanges = {
-maxHeight:400,
-minHeight:150,
-maxWidth:400,
-minWidth:150
-}
+  maxHeight: 400,
+  minHeight: 150,
+  maxWidth: 400,
+  minWidth: 150
+};
 
-var imgDrawHandler = null
-var mainCanvas = null
+var imgDrawHandler = null;
+var mainCanvas = null;
 //main canvas for drawing
-var drawingCanvas = null
-
+var drawingCanvas = null;
 // used to keep size of container to equal to canvas size
-var canvasContainer = null
-const setCanvasContaier = (container) => {
-canvasContainer = container
-}
+var canvasContainer = null;
+const setCanvasContaier = container => {
+  canvasContainer = container;
+};
 
-const setMainCanvas = (canvasRef) => {
-  mainCanvas = canvasRef
-}
-const setDrawingCanvas = (canvasRef) => {
-  drawingCanvas = canvasRef
-}
-const drawImgToCanvasBySelector = (selector) => {
-drawImgToCanvas(document.querySelector(selector))
-}
+const setMainCanvas = canvasRef => {
+  mainCanvas = canvasRef;
+};
+const setDrawingCanvas = canvasRef => {
+  drawingCanvas = canvasRef;
+};
+const drawImgToCanvasBySelector = selector => {
+  drawImgToCanvas(document.querySelector(selector));
+};
 
-const setdrawImgHandler = (handler) => {
-imgDrawHandler = handler
-}
-const drawImgToCanvas = (img) => {
+const setdrawImgHandler = handler => {
+  imgDrawHandler = handler;
+};
+const drawImgToCanvas = img => {
   var ctx = mainCanvas.getContext("2d");
   var sizes = getScaledImgSize(
     img.naturalWidth,
@@ -38,69 +37,66 @@ const drawImgToCanvas = (img) => {
     imgScalingRanges.maxHeight,
     imgScalingRanges.maxWidth
   );
-  //update canvases and their container size to fit image. 
-  resizeCanvas(mainCanvas, sizes.width, sizes.height)
-  resizeCanvas(drawingCanvas, sizes.width, sizes.height)
-  resizeElement(canvasContainer, sizes.width, sizes.height)
+  //update canvases and their container size to fit image.
+  resizeCanvas(mainCanvas, sizes.width, sizes.height);
+  resizeCanvas(drawingCanvas, sizes.width, sizes.height);
+  resizeElement(canvasContainer, sizes.width, sizes.height);
   ctx.drawImage(img, 0, 0, sizes.width, sizes.height);
-  imgDrawHandler()
-
-}
+  imgDrawHandler();
+};
 const resizeCanvas = (element, width, height) => {
-  element.width = width
-  element.height = height
-}
+  element.width = width;
+  element.height = height;
+};
 const resizeElement = (element, width, height) => {
-element.style.width = width + "px"
-element.style.height = height + "px"
-}
+  element.style.width = width + "px";
+  element.style.height = height + "px";
+};
 
 const drawTexts = (canvas, texts) => {
   var ctx = canvas.getContext("2d");
   ctx.textAlign = "center";
-  ctx.textBaseline = 'middle';
+  ctx.textBaseline = "middle";
   texts.forEach(text => {
     ctx.fillStyle = text.color;
-    var pos = dragService.textPositions.find(textPos => textPos.id === text.id)
-    var dragable = document.querySelector('#drag' + pos.id)
-    // ctx.font = "30px Arial";
-    ctx.font = text.fontSize + 'px ' + text.font;
-    // console.log(ctx.measureText(text.body).width)
-    // if(dragable.offsetWidth > 5 + ctx.measureText(text.body)) ctx.font = "15px Arial"
-    // console.log(ctx.measureText(text.body))
-    // console.log(measureTextHeight(text.body,text.fontSize,text.font))
+    var pos = dragService.getPosition(text.id);
+    ctx.font = text.fontSize + "px " + text.font;
+    var textWidth = ctx.measureText(text.body).width
+    var dragable = document.querySelector("#drag" + text.id)
+    var fixedFontSize = getFixedFontSize(text.fontSize, textWidth,
+        dragable.offsetWidth, dragable.offsetHeight);
+    ctx.font = fixedFontSize + "px " + text.font
     var drawCoordX = pos.posX + dragable.offsetWidth / 2;
     var drawCoordY = pos.posY + dragable.offsetHeight / 2;
     ctx.fillText(text.body, drawCoordX, drawCoordY);
   });
 };
-const measureTextHeight = (text,fontType,fontSize) =>{
-  //creates a span containing text to measure
-  var span = document.createElement("span");
-  span.innerText = text
-  span.style = "fontFamily: " + fontType + " fontSize: " + fontSize + "px"
-  //creates a block display div to measure by
-  var block = document.createElement("div")
-  block.style = "display: inline-block; width: 1px; height: 0px;"
-  //contain both elements in a containing div
-  var div = document.createElement("div")
-  var body = document.querySelector("body")
-  div.appendChild(span,block)
-  body.appendChild(div)
-  block.style = " verticalAlign: bottom";
-  console.log(block.offsetTop)
-  var height = block.offsetTop - span.offsetTop;
-  body.removeChild(div)
-  return height
-}
+const getFixedFontSize = (fontSize, textWidth, boxWidth, boxHeight) => {
+  var fixedFontSize = fontSize
+  if(boxWidth < textWidth){
+    fixedFontSize *= boxWidth / textWidth
+    fixedFontSize = Math.round(fixedFontSize)
+  }
+  return fixedFontSize
+};
+// const measureText = (text, fontType, fontSize) => {
+//   var span = document.createElement("span");
+//   span.innerText = text;
+//   var body = document.querySelector("body");
+//   body.appendChild(span);
+//   span.style.font = fontSize + "px " + fontType
+//   var height = span.offsetHeight;
+//   var width = span.offsetWidth;
+//   body.removeChild(span);
+//   return { height, width };
+// };
 const getScaledImgSize = (width, height, maxHeight, maxWidth) => {
   var scaledWidth, scaledHeight, higherValue;
   higherValue = width >= height ? "width" : "height";
   if (higherValue === "width" && width >= maxWidth) {
-      scaledWidth = maxWidth;
-      scaledHeight = height / (width / maxWidth);
-    }
-   else if (higherValue === 'height' && height > maxHeight ) {
+    scaledWidth = maxWidth;
+    scaledHeight = height / (width / maxWidth);
+  } else if (higherValue === "height" && height > maxHeight) {
     scaledHeight = maxHeight;
     scaledWidth = width / (height / maxHeight);
   } else {
@@ -123,11 +119,11 @@ const getScaledImgSize = (width, height, maxHeight, maxWidth) => {
   };
 };
 
-const clearCanvas = (canvas) => {
+const clearCanvas = canvas => {
   canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-}
+};
 
-const getImgHandler = (fileToUpload, img,fileInput) => {
+const getImgHandler = (fileToUpload, img, fileInput) => {
   // var originalSizeImg = document.querySelector(".canvas-img")
   // originalSizeImg.src = img.src
   var reader = new FileReader();
@@ -155,4 +151,4 @@ export default {
   clearCanvas,
   drawImgToCanvasBySelector,
   setdrawImgHandler
-}
+};

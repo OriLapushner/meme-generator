@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import ControlPanel from "./components/ControlPanel/ControlPanel.jsx";
 import CanvasContainer from "./components/CanvasContainer/CanvasContainer";
+import ImgsPicker from './components/ImgPicker/ImgPicker'
+
 import imgsSrcList from './services/imgsService'
 import dragAndDropService from "./services/dragAndDropService"
 import "./App.css";
@@ -13,11 +15,11 @@ function generateId() {
 function Text(placeholder,font){
   //text constructor
   this.id = generateId()
-  this.font = "Arial",
+  this.font = "Arial"
   this.fontSize = "30"
-  this.color = "black",
-  this.body = "",
-  this.placeholder = placeholder || "new text" ,
+  this.color = "black"
+  this.body = ""
+  this.placeholder = placeholder || "new text" 
   this.colorPickerDisplayed = false
 }
 
@@ -100,10 +102,11 @@ class App extends Component {
     })
   }
   addTextHandler = () => {
+    var newText = new Text()
     this.setState(state => {
-      var newTexts = [...state.texts, new Text()];
+      var newTexts = [...state.texts, newText];
       return {...state, texts: newTexts };
-    });
+    },dragAndDropService.addTextPosition(newText.id,0,0));
   };
   updateTextBoxStyle = (id, stylesToUpdate) => {
     this.setState(state => {
@@ -112,7 +115,6 @@ class App extends Component {
       for (var style in stylesToUpdate) {
         newStyle[style] = stylesToUpdate[style];
       }
-      // console.log(newStyle);
       var newTexts = [...state.texts];
       newTexts[idxToUpdate].style = newStyle
       return {...state,
@@ -158,19 +160,15 @@ class App extends Component {
   }
   initDragableDivs = () => {
     this.setState(state => {
-      return {...state,texts:[new Text(),new Text()]}
+      return {...state,texts:[new Text("top text"),new Text("bottom text")]}
     },function(){
       dragAndDropService.deleteAllTextPositions()
-      console.log(dragAndDropService.textPositions)
-      console.log(this.state.texts)
-      // console.log(this.state.texts)
       var textBox1 = document.querySelector("#drag" + this.state.texts[0].id);
       var textBox2 = document.querySelector("#drag" + this.state.texts[1].id);
       textBox1.style.width = this.canvasRef.drawingCanvas.current.width / 2 + "px";
       textBox2.style.width = this.canvasRef.drawingCanvas.current.width / 2 + "px";
       var xpos = this.canvasRef.drawingCanvas.current.width / 2 - textBox1.offsetWidth / 2;
       var ypos = this.canvasRef.drawingCanvas.current.height - textBox1.offsetHeight;
-      console.log(xpos,ypos)
       dragAndDropService.addTextPosition(this.state.texts[0].id, xpos, 0)
       dragAndDropService.addTextPosition(this.state.texts[1].id, xpos, ypos)
       dragAndDropService.setTextPosition(this.state.texts[0].id, xpos, 0);
@@ -182,7 +180,7 @@ class App extends Component {
   render() {
     return (
       <div className="App" onDragOver={this.onDragHandler} onDrop={this.onDropHandler}>
-      <h3 className="instruction-text">you can upload an image by dragging it to the screen</h3>
+      <h3 className="instruction-text">you can upload an image by dragging it anywhere in the screen</h3>
         <CanvasContainer
           initDragableDivs={this.initDragableDivs}
           texts={this.state.texts}
@@ -202,6 +200,7 @@ class App extends Component {
           saveImg={this.saveImg}
           colorPickerClickedHandler={this.colorPickerClickedHandler}
         />
+        <ImgsPicker imgs={this.state.imgsSrcs}/>
       </div>
     );
   }

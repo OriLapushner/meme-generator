@@ -1,6 +1,7 @@
 .App{
 flex-wrap: wrap;
 display: flex;
+justify-content: space-around;
 }
 html{
 	background:#748aad;
@@ -34,5 +35,5 @@ body,.App,#root{
 	top:1px;
 }
 .instruction-text{
-	/* width:100%; */
+	width:100%;
 }

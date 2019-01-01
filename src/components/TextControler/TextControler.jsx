@@ -1,6 +1,7 @@
 import React from "react";
 import ColorPicker from '../ColorPicker/ColorPicker'
 import "./TextControler.css";
+import trashIcon from '../../media/trash icon.png'
 const TextControler = props => {
   return (
     <div className="text-controler">
@@ -13,8 +14,7 @@ const TextControler = props => {
       <div className="buttons-container">
       <div>
         <select>
-          <option>font 1</option>
-          <option>font 2</option>
+          <option>Arial</option>
         </select>
       </div>
       <span>font-size:</span>
@@ -27,7 +27,9 @@ const TextControler = props => {
       
       <ColorPicker textInfo={props.textInfo}
       colorChangedHandler={props.colorChangedHandler}/>
-      <button onClick={() => props.deleteText(props.textInfo.id)} className="button-default">Delete</button>
+      {/* <button onClick={() => props.deleteText(props.textInfo.id)} className="button-default">Delete</button> */}
+      <img onClick={() => props.deleteText(props.textInfo.id)}
+       className="trash-icon" src={trashIcon} title="delete text"></img>
       </div>
     </div>
   );

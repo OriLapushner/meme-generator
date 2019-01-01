@@ -1,13 +1,11 @@
 import React from "react";
 import TextControlers from "../TextControlers/TextControlers";
-import ImgsPicker from '../ImgPicker/ImgPicker'
 import "./ControlPanel.css";
 const controlPanel = props => {
   return (
     <div className="control-panel">
         <button className="button-default add-text-button" onClick={props.addTextHandler}>Add Text</button>
         <button className="button-default upload-img-button" onClick={props.fireInputClickEvent}>Upload Image</button>
-        <ImgsPicker imgs={props.imgsSrcs}/>
       <TextControlers texts={props.texts}
       deleteText={props.deleteText}
       fontSizeChangedHandler={props.fontSizeChangedHandler}

@@ -28,12 +28,14 @@ class CanvasContainer extends Component {
     canvasService.setDrawingCanvas(this.drawingCanvas.current);
     canvasService.setCanvasContaier(this.canvasContainer.current);
     canvasService.setdrawImgHandler(this.props.initDragableDivs);
+    this.drawDefaultImg();
     this.props.initDragableDivs();
+
   }
   componentWillUnmount() {
     this.props.getRef(null);
   }
-  clearCanvas(canvas) {
+  clearCanvas = (canvas) => {
     canvasService.clearCanvas(canvas);
   }
   drawTexts = (canvas, texts) => {
@@ -49,6 +51,15 @@ class CanvasContainer extends Component {
   drawImgToCanvas = (img = this.img.current) => {
     canvasService.drawImgToCanvas(img);
   };
+  drawDefaultImg(){
+    //idx is the index of img who will be drawn
+    var idx = 0;
+    var img = document.querySelector("#imgPicker" + idx)
+    img.addEventListener("load",() => {
+      canvasService.drawImgToCanvasBySelector('#imgPicker' + idx)
+    })
+    
+  }
 
   render() {
     return (

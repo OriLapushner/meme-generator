@@ -4,10 +4,11 @@ display: flex;
 justify-content: space-around;
 }
 html{
-	background:#748aad;
+	background:#fff;
 	height: 100%;
 }
 body,.App,#root{
+	font-family: Oswald;
     min-height: 100%;
 }
 .hidden {

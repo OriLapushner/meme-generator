@@ -9,10 +9,11 @@ class DragableDiv extends Component {
     dragService.removeListeners(this.props.text.id)
   }
   render() {
+    var classes = this.props.text.isSelected ? " selected" : ""
     return (
       <div
         id={"drag" + this.props.text.id}
-        className="dragable"
+        className={"dragable" + classes}
         >
         <div className="resizer left-resizer bot-resizer" id={"tr" + this.props.text.id}></div>
         <div className="resizer left-resizer top-resizer" id={"tl" + this.props.text.id}></div>

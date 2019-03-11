@@ -71,7 +71,7 @@ const drawTexts = (canvas, texts) => {
     ctx.fillText(text.body, drawCoordX, drawCoordY);
   });
 };
-const getFixedFontSize = (fontSize, textWidth, boxWidth, boxHeight) => {
+const getFixedFontSize = (fontSize, textWidth, boxWidth) => {
   var fixedFontSize = fontSize
   if(boxWidth < textWidth){
     fixedFontSize *= boxWidth / textWidth
@@ -79,17 +79,7 @@ const getFixedFontSize = (fontSize, textWidth, boxWidth, boxHeight) => {
   }
   return fixedFontSize
 };
-// const measureText = (text, fontType, fontSize) => {
-//   var span = document.createElement("span");
-//   span.innerText = text;
-//   var body = document.querySelector("body");
-//   body.appendChild(span);
-//   span.style.font = fontSize + "px " + fontType
-//   var height = span.offsetHeight;
-//   var width = span.offsetWidth;
-//   body.removeChild(span);
-//   return { height, width };
-// };
+
 const getScaledImgSize = (width, height, maxHeight, maxWidth) => {
   var scaledWidth, scaledHeight, higherValue;
   higherValue = width >= height ? "width" : "height";
@@ -103,16 +93,16 @@ const getScaledImgSize = (width, height, maxHeight, maxWidth) => {
     scaledHeight = height;
     scaledWidth = width;
   }
-  // console.log(
-  //   "original relation:",
-  //   width / height,
-  //   "scaled relation:",
-  //   scaledWidth / scaledHeight,
-  //   "scaled width",
-  //   width,
-  //   "scaled height",
-  //   height
-  // );
+  console.log(
+    "original relation:",
+    width / height,
+    "scaled relation:",
+    scaledWidth / scaledHeight,
+    "scaled width",
+    width,
+    "scaled height",
+    height
+  );
   return {
     width: scaledWidth,
     height: scaledHeight
@@ -124,8 +114,6 @@ const clearCanvas = canvas => {
 };
 
 const getImgHandler = (fileToUpload, img, fileInput) => {
-  // var originalSizeImg = document.querySelector(".canvas-img")
-  // originalSizeImg.src = img.src
   var reader = new FileReader();
   reader.addEventListener(
     "load",

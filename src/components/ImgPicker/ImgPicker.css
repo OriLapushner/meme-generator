@@ -1,12 +1,16 @@
 .img-picker-container {
-    min-height: 220px;
-    max-height: 400px;
-    overflow-y: scroll;
-    overflow-x:hidden;
-    width: 83px;
+    /* min-height: 220px; */
+    /* max-height: 400px; */
+    overflow-x: scroll;
+    overflow-y:hidden;
+    width:300px;
+    height: 83px;
+    display: flex;
+    /* transform: rotate(90deg); */
 }
 
 .img-picker-container img {
+    /* transform: rotate(-90deg); */
     height: 65px;
     width: 65px;
 }

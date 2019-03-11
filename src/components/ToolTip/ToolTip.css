@@ -1,0 +1,12 @@
+.tool-tip-container{
+    width:100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+.fa-star {
+color:  #3399ff
+}
+.tool-tip-container span {
+    margin: 5px;
+}

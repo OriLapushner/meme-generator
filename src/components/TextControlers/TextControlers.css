@@ -1,7 +1,6 @@
 .text-controlers{
-    /* width:100%; */
     display:flex;
     flex-direction: column;
     align-items: flex-end;
-    grid-area: 6 / 5 / 20 / 20;
+    width:100%;
 }

@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import ControlPanel from "./components/ControlPanel/ControlPanel.jsx";
 import CanvasContainer from "./components/CanvasContainer/CanvasContainer";
 import ImgsPicker from './components/ImgPicker/ImgPicker'
+import ToolTip from './components/ToolTip/ToolTip'
+import fontList from './services/fontService'
 
 import imgsSrcList from './services/imgsService'
 import dragAndDropService from "./services/dragAndDropService"
 import "./App.css";
 
-// google key to web fonts: AIzaSyAERA7bb7EV8f4WUekp3-jaA4CrccIz6VY
 function generateId() {
   return Math.floor(Math.random() * 1000000);
 }
@@ -21,6 +22,7 @@ function Text(placeholder,font){
   this.body = ""
   this.placeholder = placeholder || "new text" 
   this.colorPickerDisplayed = false
+  this.isSelected = false;
 }
 
 class App extends Component {
@@ -32,8 +34,11 @@ class App extends Component {
         new Text("text 1"),
         new Text("text 2")
       ],
-      imgsSrcs: imgsSrcList
+      imgsSrcs: imgsSrcList,
     };
+  }
+  updateSelected = (id,val) => {
+      this.updateTextProps(id, {isSelected: val})
   }
   colorChangedHandler = (color,id) => {
     this.updateTextProps(id,{color})
@@ -82,7 +87,7 @@ class App extends Component {
       newTexts[idx][prop] = newTextProps[prop]
     }
     return {
-      ...state,
+      //...state,
       texts:newTexts
     }
   })  
@@ -180,14 +185,18 @@ class App extends Component {
   render() {
     return (
       <div className="App" onDragOver={this.onDragHandler} onDrop={this.onDropHandler}>
-      <h3 className="instruction-text">you can upload an image by dragging it anywhere in the screen</h3>
-        <CanvasContainer
+          <ToolTip/>
+          <CanvasContainer
+          updateSelected={this.updateSelected}
           initDragableDivs={this.initDragableDivs}
           texts={this.state.texts}
           updateTextBoxStyle={this.updateTextBoxStyle}
           getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
+          imgs={this.state.imgsSrcs}
+          updateSelected={this.updateSelected}
+          fontList={fontList}
           deleteText={this.deleteText}
           fireInputClickEvent={this.fireInputClickEvent}
           imgsSrcs={this.state.imgsSrcs}
@@ -200,7 +209,6 @@ class App extends Component {
           saveImg={this.saveImg}
           colorPickerClickedHandler={this.colorPickerClickedHandler}
         />
-        <ImgsPicker imgs={this.state.imgsSrcs}/>
       </div>
     );
   }

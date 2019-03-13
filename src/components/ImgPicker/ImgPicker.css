@@ -1,16 +1,27 @@
 .img-picker-container {
-    /* min-height: 220px; */
-    /* max-height: 400px; */
-    overflow-x: scroll;
-    overflow-y:hidden;
     width:300px;
     height: 83px;
     display: flex;
-    /* transform: rotate(90deg); */
+    justify-content: center;
+    align-items:center;
+    background: #5c88d1;
+    border-radius: 8%;
+    margin-top: 20px;
+    user-select: none
 }
 
 .img-picker-container img {
-    /* transform: rotate(-90deg); */
     height: 65px;
     width: 65px;
+    margin:5px;
+}
+.imgs-container{
+    margin: 0 15px;
+}
+.arrow{
+    cursor: pointer;
+    color: lightsteelblue;
+}
+.arrow:hover{
+color:#245fc1;
 }

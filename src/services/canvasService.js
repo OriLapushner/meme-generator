@@ -93,16 +93,16 @@ const getScaledImgSize = (width, height, maxHeight, maxWidth) => {
     scaledHeight = height;
     scaledWidth = width;
   }
-  console.log(
-    "original relation:",
-    width / height,
-    "scaled relation:",
-    scaledWidth / scaledHeight,
-    "scaled width",
-    width,
-    "scaled height",
-    height
-  );
+  // console.log(
+  //   "original relation:",
+  //   width / height,
+  //   "scaled relation:",
+  //   scaledWidth / scaledHeight,
+  //   "scaled width",
+  //   width,
+  //   "scaled height",
+  //   height
+  // );
   return {
     width: scaledWidth,
     height: scaledHeight

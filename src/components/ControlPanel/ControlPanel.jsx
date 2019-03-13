@@ -17,7 +17,9 @@ const controlPanel = props => {
       colorPickerClickedHandler={props.colorPickerClickedHandler}
       colorChangedHandler={props.colorChangedHandler} />
     <button onClick={props.saveImg} className="button-default download-btn">Download Image</button>
-    <ImgPicker imgs={props.imgs}/>
+    <ImgPicker imgs={props.imgs}
+     updateDisplayedImgs={props.updateDisplayedImgs}
+     />
     </div>
   );
 };

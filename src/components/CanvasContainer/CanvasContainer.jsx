@@ -51,15 +51,18 @@ class CanvasContainer extends Component {
   drawImgToCanvas = (img = this.img.current) => {
     canvasService.drawImgToCanvas(img);
   };
+  drawFirstImg = () =>{
+    var idx = 0;
+    canvasService.drawImgToCanvasBySelector('#imgPicker' + idx)
+    var img = document.querySelector("#imgPicker" + idx)
+    img.removeEventListener("load",this.drawFirstImg)
+  }
   drawDefaultImg(){
-    //idx is the index of img who will be drawn
     var idx = 0;
     var img = document.querySelector("#imgPicker" + idx)
-    img.addEventListener("load",() => {
-      canvasService.drawImgToCanvasBySelector('#imgPicker' + idx)
-    })
+    img.addEventListener("load",this.drawFirstImg)
+    }
     
-  }
 
   render() {
     return (

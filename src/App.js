@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ControlPanel from "./components/ControlPanel/ControlPanel.jsx";
 import CanvasContainer from "./components/CanvasContainer/CanvasContainer";
-import ImgsPicker from './components/ImgPicker/ImgPicker'
 import ToolTip from './components/ToolTip/ToolTip'
 import fontList from './services/fontService'
 
@@ -27,15 +26,34 @@ function Text(placeholder,font){
 
 class App extends Component {
   constructor(props) {
+    console.log()
     super(props);
     this.state = {
-      canvasHeight: 0,
       texts: [
         new Text("text 1"),
         new Text("text 2")
       ],
       imgsSrcs: imgsSrcList,
+      imgsToDisplay: [imgsSrcList[0],imgsSrcList[1],imgsSrcList[2]], 
+      imgsToDisplayIdxs: [0,1,2]
     };
+  }
+  updateDisplayedImgs = val => {
+    this.setState(state => {
+      var imgsToDisplay = []
+      var imgsToDisplayIdxs = []
+      state.imgsToDisplayIdxs.forEach(idx => {
+        var newIdx = idx + val
+        newIdx = newIdx > state.imgsSrcs.length - 1 ? 0  : newIdx
+        newIdx = newIdx < 0 ? state.imgsSrcs.length + val : newIdx
+        imgsToDisplayIdxs.push(newIdx)
+        imgsToDisplay.push(state.imgsSrcs[newIdx])
+      })
+      return {
+        imgsToDisplay,
+        imgsToDisplayIdxs
+      }
+    })     
   }
   updateSelected = (id,val) => {
       this.updateTextProps(id, {isSelected: val})
@@ -194,7 +212,8 @@ class App extends Component {
           getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
-          imgs={this.state.imgsSrcs}
+          updateDisplayedImgs={this.updateDisplayedImgs}
+          imgs={this.state.imgsToDisplay}
           updateSelected={this.updateSelected}
           fontList={fontList}
           deleteText={this.deleteText}

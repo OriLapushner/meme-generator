@@ -12,7 +12,10 @@ body,.App,#root{
     min-height: 100%;
 }
 .hidden {
-    display: none;
+	display: none;
+}
+.not-visible{
+	visibility: hidden;
 }
 .rounded{
     border-radius: 50%

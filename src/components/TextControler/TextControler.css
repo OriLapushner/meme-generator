@@ -19,6 +19,7 @@
     width:250px;    
 }
 .txt-color-button{
+    cursor: pointer;
     height: 20px;
     width:20px;
     margin: auto 3px;
@@ -40,6 +41,9 @@
 
 .font-selector{
     width:90px;
+}
+.trash-icon{
+    cursor: pointer;
 }
 @media only screen and (max-width: 670px) {
     .controler-text-area {

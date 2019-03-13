@@ -8,6 +8,7 @@ const controlPanel = props => {
         <button className="button-default add-text-button" onClick={props.addTextHandler}>Add Text</button>
         <button className="button-default upload-img-button" onClick={props.fireInputClickEvent}>Upload Image</button>
       <TextControlers texts={props.texts}
+      fontChangedHandler={props.fontChangedHandler}
       updateSelected={props.updateSelected}
       fontList={props.fontList}
       deleteText={props.deleteText}

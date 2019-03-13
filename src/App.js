@@ -26,7 +26,6 @@ function Text(placeholder,font){
 
 class App extends Component {
   constructor(props) {
-    console.log()
     super(props);
     this.state = {
       texts: [
@@ -37,6 +36,16 @@ class App extends Component {
       imgsToDisplay: [imgsSrcList[0],imgsSrcList[1],imgsSrcList[2]], 
       imgsToDisplayIdxs: [0,1,2]
     };
+  }
+  fontChangedHandler = (id, val) => {
+    this.setState((state) => {
+      var newTexts = [...state.texts]
+      var textToUpdate = newTexts.find(text => text.id === id)
+      textToUpdate.font = val
+      this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
+      this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,newTexts)
+      return {newTexts}     
+    })    
   }
   updateDisplayedImgs = val => {
     this.setState(state => {
@@ -56,7 +65,13 @@ class App extends Component {
     })     
   }
   updateSelected = (id,val) => {
-      this.updateTextProps(id, {isSelected: val})
+    this.setState(state => {
+      var newTexts = [...state.texts]
+      var textToUpdate = newTexts.find(text => text.id === id)
+      textToUpdate
+      this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
+      this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,newTexts)
+    })
   }
   colorChangedHandler = (color,id) => {
     this.updateTextProps(id,{color})
@@ -94,7 +109,7 @@ class App extends Component {
       textToUpdate.fontSize = val
       this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
       this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,newTexts)
-      return {...state,newTexts}
+      return {newTexts}
     })
   }
   updateTextProps = (id,newTextProps) => {
@@ -105,12 +120,11 @@ class App extends Component {
       newTexts[idx][prop] = newTextProps[prop]
     }
     return {
-      //...state,
       texts:newTexts
     }
   })  
   }
-  updateTextBody = (e,id) => {
+  updateTextBody = (id,e) => {
     var val = e.target.value
     this.setState(state => {
       var idx = state.texts.findIndex(text => id === text.id)
@@ -131,21 +145,6 @@ class App extends Component {
       return {...state, texts: newTexts };
     },dragAndDropService.addTextPosition(newText.id,0,0));
   };
-  updateTextBoxStyle = (id, stylesToUpdate) => {
-    this.setState(state => {
-      var idxToUpdate = state.texts.findIndex(text => id === text.id);
-      var newStyle = { ...state.texts[idxToUpdate].style };
-      for (var style in stylesToUpdate) {
-        newStyle[style] = stylesToUpdate[style];
-      }
-      var newTexts = [...state.texts];
-      newTexts[idxToUpdate].style = newStyle
-      return {...state,
-      texts:newTexts};
-    });
-    this.canvasRef.clearCanvas(this.canvasRef.drawingCanvas.current)
-    this.canvasRef.drawTexts(this.canvasRef.drawingCanvas.current,this.state.texts)
-  }
   saveImg = () => {
     this.canvasRef.drawTexts(this.canvasRef.canvas.current,this.state.texts)
     var dataURL = this.canvasRef.canvas.current.toDataURL('image/jpeg',1)
@@ -176,7 +175,7 @@ class App extends Component {
       var newTexts = state.texts.slice()
       var idx = state.texts.findIndex(text => id === text.id)
       newTexts.splice(idx,1)
-      return {...state,texts:newTexts}
+      return {texts:newTexts}
     },function(){
       dragAndDropService.deleteTextPosition(id)
     })
@@ -208,10 +207,10 @@ class App extends Component {
           updateSelected={this.updateSelected}
           initDragableDivs={this.initDragableDivs}
           texts={this.state.texts}
-          updateTextBoxStyle={this.updateTextBoxStyle}
           getRef={ref => this.canvasRef = ref}
         />
         <ControlPanel
+          fontChangedHandler={this.fontChangedHandler}
           updateDisplayedImgs={this.updateDisplayedImgs}
           imgs={this.state.imgsToDisplay}
           updateSelected={this.updateSelected}

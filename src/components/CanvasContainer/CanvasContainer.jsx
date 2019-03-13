@@ -77,7 +77,6 @@ class CanvasContainer extends Component {
         <DragableDivs
           texts={this.props.texts}
           canvasSize={this.state.sizes}
-          updateTextBoxStyle={this.props.updateTextBoxStyle}
         />
         <canvas className="canvas main-canvas" ref={this.canvas} />
         <input

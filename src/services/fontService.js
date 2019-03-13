@@ -1,6 +1,7 @@
 import webFont from 'webfontloader'
 
 const fontList = [
+    'Arial',
     'Droid Serif',
     'Dancing Script',
     'Ubuntu',

@@ -15,13 +15,13 @@ const TextControler = props => {
         className="controler-text-area"
         placeholder={props.textInfo.placeholder}
         rows="2"
-        onKeyUp={(event) => props.updateTextBody(event,props.textInfo.id)}
+        onKeyUp={(e) => props.updateTextBody(props.textInfo.id,e)}
       />
       <div className="buttons-container">
       <div>
         <div className="font-type-container">
         <span>font-type:</span>
-        <select className="font-selector">
+        <select onChange={(e) => props.fontChangedHandler(props.textInfo.id,e.target.value)} className="font-selector">
           {options}
         </select>
         </div>
